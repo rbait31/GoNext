@@ -1,12 +1,9 @@
-import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Appbar, Button, Text, Snackbar } from 'react-native-paper';
+import { Appbar, Button } from 'react-native-paper';
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
-  const [snackbarVisible, setSnackbarVisible] = useState(false);
-
-  const showSnackbar = () => setSnackbarVisible(true);
-  const hideSnackbar = () => setSnackbarVisible(false);
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
@@ -15,21 +12,39 @@ export default function HomeScreen() {
       </Appbar.Header>
 
       <View style={styles.content}>
-        <Text variant="headlineMedium" style={styles.text}>
-          Привет, Супер-Тупер!
-        </Text>
-        <Button mode="contained" onPress={showSnackbar} style={styles.button}>
-          Нажми меня
+        <Button
+          mode="contained"
+          onPress={() => router.push('/places/index')}
+          style={styles.button}
+          icon="map-marker"
+        >
+          Места
+        </Button>
+        <Button
+          mode="contained"
+          onPress={() => router.push('/trips/index')}
+          style={styles.button}
+          icon="map"
+        >
+          Поездки
+        </Button>
+        <Button
+          mode="contained"
+          onPress={() => router.push('/next')}
+          style={styles.button}
+          icon="compass"
+        >
+          Следующее место
+        </Button>
+        <Button
+          mode="contained"
+          onPress={() => router.push('/settings')}
+          style={styles.button}
+          icon="cog"
+        >
+          Настройки
         </Button>
       </View>
-
-      <Snackbar
-        visible={snackbarVisible}
-        onDismiss={hideSnackbar}
-        duration={2000}
-      >
-        Хи-хи
-      </Snackbar>
     </View>
   );
 }
@@ -41,12 +56,9 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
     padding: 24,
-  },
-  text: {
-    marginBottom: 24,
-    textAlign: 'center',
+    gap: 16,
   },
   button: {},
 });
