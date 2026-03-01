@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "GoNext",
+    "slug": "gonext",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "gonext",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.gonext.app"
+    },
+    "android": {
+      "package": "com.gonext.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-asset"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
