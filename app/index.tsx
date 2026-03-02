@@ -14,7 +14,7 @@ export default function HomeScreen() {
       <View style={styles.content}>
         <Button
           mode="contained"
-          onPress={() => router.push('/places/index')}
+          onPress={() => router.push('/places')}
           style={styles.button}
           icon="map-marker"
         >
@@ -22,7 +22,7 @@ export default function HomeScreen() {
         </Button>
         <Button
           mode="contained"
-          onPress={() => router.push('/trips/index')}
+          onPress={() => router.push('/trips')}
           style={styles.button}
           icon="map"
         >
