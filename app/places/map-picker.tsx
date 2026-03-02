@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { StyleSheet, View, Platform } from 'react-native';
-import { Appbar, Button, TextInput, Text } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { Appbar, Button, Text } from 'react-native-paper';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import MapView, { Marker } from 'react-native-maps';
 import { setMapSelection } from '@/lib/selectionStore';
@@ -33,52 +33,6 @@ export default function MapPickerScreen() {
     },
     []
   );
-
-  const handleLatChange = (t: string) => {
-    const n = parseFloat(t);
-    if (!isNaN(n)) setLat(n);
-  };
-
-  const handleLngChange = (t: string) => {
-    const n = parseFloat(t);
-    if (!isNaN(n)) setLng(n);
-  };
-
-  // На web react-native-maps может не работать — показываем форму ввода
-  if (Platform.OS === 'web') {
-    return (
-      <View style={styles.container}>
-        <Appbar.Header>
-          <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Выбрать координаты" />
-        </Appbar.Header>
-        <View style={styles.webForm}>
-          <Text variant="bodyMedium" style={styles.hint}>
-            Введите координаты или используйте приложение на телефоне для выбора на карте.
-          </Text>
-          <TextInput
-            label="Широта"
-            value={String(lat)}
-            onChangeText={handleLatChange}
-            keyboardType="numeric"
-            mode="outlined"
-            style={styles.input}
-          />
-          <TextInput
-            label="Долгота"
-            value={String(lng)}
-            onChangeText={handleLngChange}
-            keyboardType="numeric"
-            mode="outlined"
-            style={styles.input}
-          />
-          <Button mode="contained" onPress={handleConfirm}>
-            Выбрать
-          </Button>
-        </View>
-      </View>
-    );
-  }
 
   return (
     <View style={styles.container}>
@@ -121,16 +75,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
     backgroundColor: 'white',
-  },
-  webForm: {
-    padding: 16,
-    gap: 12,
-  },
-  hint: {
-    marginBottom: 8,
-    opacity: 0.8,
-  },
-  input: {
-    marginBottom: 8,
   },
 });
