@@ -3,4 +3,5 @@
  */
 
 export * from './places';
+export * from './photos';
 export * from './trips';

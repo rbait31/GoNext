@@ -6,11 +6,16 @@ export default function PlaceDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
 
+  const handleEdit = () => {
+    router.push(`/places/${id}/edit`);
+  };
+
   return (
     <View style={styles.container}>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Место" />
+        <Appbar.Action icon="pencil" onPress={handleEdit} />
       </Appbar.Header>
 
       <View style={styles.content}>
