@@ -29,7 +29,7 @@ export default function NewPlaceScreen() {
   const [description, setDescription] = useState('');
   const [visitlater, setVisitlater] = useState(true);
   const [liked, setLiked] = useState(false);
-  const [coords, setCoords] = useState('55.7558, 37.6173');
+  const [coords, setCoords] = useState('');
   const [photoPaths, setPhotoPaths] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
