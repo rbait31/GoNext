@@ -3,13 +3,14 @@
  */
 import { useState, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Appbar, Button, TextInput, Text } from 'react-native-paper';
+import { Appbar, Button, TextInput, Text, useTheme } from 'react-native-paper';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { setMapSelection } from '@/lib/selectionStore';
 import { parseDD, formatDD } from '@/lib/coordsUtils';
 
 export default function MapPickerScreen() {
   const router = useRouter();
+  const theme = useTheme();
   const params = useLocalSearchParams<{ lat?: string; lng?: string }>();
   const initialLat = parseFloat(params.lat ?? '55.7558') || 55.7558;
   const initialLng = parseFloat(params.lng ?? '37.6173') || 37.6173;
@@ -34,14 +35,22 @@ export default function MapPickerScreen() {
         <Text variant="bodyMedium" style={styles.hint}>
           Введите координаты в формате DD (широта, долгота) или используйте приложение на телефоне для выбора на карте.
         </Text>
-        <TextInput
-          label="Координаты (DD)"
-          value={coords}
-          onChangeText={setCoords}
-          placeholder="55.7558, 37.6173"
-          mode="outlined"
-          style={styles.input}
-        />
+        <View style={styles.coordBlock}>
+          <Text
+            variant="labelLarge"
+            style={[styles.coordLabel, { color: theme.colors.onSurfaceVariant }]}
+          >
+            Координаты (DD)
+          </Text>
+          <TextInput
+            value={coords}
+            onChangeText={setCoords}
+            placeholder="55.7558, 37.6173"
+            placeholderTextColor={theme.colors.onSurfaceVariant}
+            mode="outlined"
+            style={styles.input}
+          />
+        </View>
         <Button mode="contained" onPress={handleConfirm}>
           Выбрать
         </Button>
@@ -60,6 +69,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     opacity: 0.8,
   },
+  coordBlock: { marginBottom: 12 },
+  coordLabel: { marginBottom: 4 },
   input: {
     marginBottom: 8,
   },

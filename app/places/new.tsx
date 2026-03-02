@@ -147,14 +147,22 @@ export default function NewPlaceScreen() {
           </Button>
         </View>
 
-        <TextInput
-          label="Координаты (DD)"
-          value={coords}
-          onChangeText={setCoords}
-          mode="outlined"
-          placeholder="55.7558, 37.6173"
-          style={styles.input}
-        />
+        <View style={styles.coordBlock}>
+          <Text
+            variant="labelLarge"
+            style={[styles.coordLabel, { color: theme.colors.onSurfaceVariant }]}
+          >
+            Координаты (DD)
+          </Text>
+          <TextInput
+            value={coords}
+            onChangeText={setCoords}
+            mode="outlined"
+            placeholder="55.7558, 37.6173"
+            placeholderTextColor={theme.colors.onSurfaceVariant}
+            style={styles.input}
+          />
+        </View>
         <Button
           mode="outlined"
           icon="map-marker"
@@ -220,6 +228,8 @@ const styles = StyleSheet.create({
   content: { flex: 1 },
   form: { padding: 16, paddingBottom: 32 },
   input: { marginBottom: 12 },
+  coordBlock: { marginBottom: 12 },
+  coordLabel: { marginBottom: 4 },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
