@@ -27,6 +27,7 @@ import {
 import type { PlacePhoto } from '@/lib/dal';
 import { getAndClearMapSelection } from '@/lib/selectionStore';
 import { pickImage, takePhoto, getPhotoUri } from '@/lib/photoService';
+import { parseDD, formatDD } from '@/lib/coordsUtils';
 
 export default function EditPlaceScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -38,8 +39,7 @@ export default function EditPlaceScreen() {
   const [description, setDescription] = useState('');
   const [visitlater, setVisitlater] = useState(true);
   const [liked, setLiked] = useState(false);
-  const [lat, setLat] = useState('0');
-  const [lng, setLng] = useState('0');
+  const [coords, setCoords] = useState('0, 0');
   const [photos, setPhotos] = useState<PlacePhoto[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -49,8 +49,7 @@ export default function EditPlaceScreen() {
     useCallback(() => {
       const selection = getAndClearMapSelection();
       if (selection) {
-        setLat(selection.lat.toFixed(6));
-        setLng(selection.lng.toFixed(6));
+        setCoords(formatDD(selection.lat, selection.lng));
       }
     }, [])
   );
@@ -67,8 +66,7 @@ export default function EditPlaceScreen() {
           setDescription(place.description);
           setVisitlater(place.visitlater);
           setLiked(place.liked);
-          setLat(String(place.lat));
-          setLng(String(place.lng));
+          setCoords(formatDD(place.lat, place.lng));
           setPhotos(photoList);
         }
       })
@@ -105,6 +103,9 @@ export default function EditPlaceScreen() {
   };
 
   const handlePickOnMap = () => {
+    const parsed = parseDD(coords);
+    const lat = parsed?.lat ?? 55.7558;
+    const lng = parsed?.lng ?? 37.6173;
     router.push(`/places/map-picker?lat=${lat}&lng=${lng}`);
   };
 
@@ -117,13 +118,19 @@ export default function EditPlaceScreen() {
     setError('');
     setSaving(true);
     try {
+      const parsed = parseDD(coords);
+      if (!parsed) {
+        setError('Введите координаты в формате: широта, долгота');
+        setSaving(false);
+        return;
+      }
       await updatePlace(placeId, {
         name: name.trim(),
         description: description.trim(),
         visitlater,
         liked,
-        lat: parseFloat(lat) || 0,
-        lng: parseFloat(lng) || 0,
+        lat: parsed.lat,
+        lng: parsed.lng,
       });
       router.back();
     } catch (err) {
@@ -197,24 +204,14 @@ export default function EditPlaceScreen() {
           </Button>
         </View>
 
-        <View style={styles.coordsRow}>
-          <TextInput
-            label="Широта"
-            value={lat}
-            onChangeText={setLat}
-            mode="outlined"
-            keyboardType="numeric"
-            style={[styles.input, styles.coordInput]}
-          />
-          <TextInput
-            label="Долгота"
-            value={lng}
-            onChangeText={setLng}
-            mode="outlined"
-            keyboardType="numeric"
-            style={[styles.input, styles.coordInput]}
-          />
-        </View>
+        <TextInput
+          label="Координаты (DD)"
+          value={coords}
+          onChangeText={setCoords}
+          mode="outlined"
+          placeholder="55.7558, 37.6173"
+          style={styles.input}
+        />
         <Button
           mode="outlined"
           icon="map-marker"
@@ -285,8 +282,6 @@ const styles = StyleSheet.create({
   content: { flex: 1 },
   form: { padding: 16, paddingBottom: 32 },
   input: { marginBottom: 12 },
-  coordInput: { flex: 1 },
-  coordsRow: { flexDirection: 'row', gap: 12 },
   row: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -19,6 +19,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { createPlace, addPlacePhoto } from '@/lib/dal';
 import { getAndClearMapSelection } from '@/lib/selectionStore';
 import { pickImage, takePhoto, getPhotoUri } from '@/lib/photoService';
+import { parseDD, formatDD } from '@/lib/coordsUtils';
 
 export default function NewPlaceScreen() {
   const router = useRouter();
@@ -28,8 +29,7 @@ export default function NewPlaceScreen() {
   const [description, setDescription] = useState('');
   const [visitlater, setVisitlater] = useState(true);
   const [liked, setLiked] = useState(false);
-  const [lat, setLat] = useState('55.7558');
-  const [lng, setLng] = useState('37.6173');
+  const [coords, setCoords] = useState('55.7558, 37.6173');
   const [photoPaths, setPhotoPaths] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -38,8 +38,7 @@ export default function NewPlaceScreen() {
     useCallback(() => {
       const selection = getAndClearMapSelection();
       if (selection) {
-        setLat(selection.lat.toFixed(6));
-        setLng(selection.lng.toFixed(6));
+        setCoords(formatDD(selection.lat, selection.lng));
       }
     }, [])
   );
@@ -59,6 +58,9 @@ export default function NewPlaceScreen() {
   };
 
   const handlePickOnMap = () => {
+    const parsed = parseDD(coords);
+    const lat = parsed?.lat ?? 55.7558;
+    const lng = parsed?.lng ?? 37.6173;
     router.push(`/places/map-picker?lat=${lat}&lng=${lng}`);
   };
 
@@ -70,13 +72,19 @@ export default function NewPlaceScreen() {
     setError('');
     setSaving(true);
     try {
+      const parsed = parseDD(coords);
+      if (!parsed) {
+        setError('Введите координаты в формате: широта, долгота');
+        setSaving(false);
+        return;
+      }
       const place = await createPlace({
         name: name.trim(),
         description: description.trim(),
         visitlater,
         liked,
-        lat: parseFloat(lat) || 0,
-        lng: parseFloat(lng) || 0,
+        lat: parsed.lat,
+        lng: parsed.lng,
       });
       for (const path of photoPaths) {
         await addPlacePhoto(place.id, path);
@@ -139,24 +147,14 @@ export default function NewPlaceScreen() {
           </Button>
         </View>
 
-        <View style={styles.coordsRow}>
-          <TextInput
-            label="Широта"
-            value={lat}
-            onChangeText={setLat}
-            mode="outlined"
-            keyboardType="numeric"
-            style={[styles.input, styles.coordInput]}
-          />
-          <TextInput
-            label="Долгота"
-            value={lng}
-            onChangeText={setLng}
-            mode="outlined"
-            keyboardType="numeric"
-            style={[styles.input, styles.coordInput]}
-          />
-        </View>
+        <TextInput
+          label="Координаты (DD)"
+          value={coords}
+          onChangeText={setCoords}
+          mode="outlined"
+          placeholder="55.7558, 37.6173"
+          style={styles.input}
+        />
         <Button
           mode="outlined"
           icon="map-marker"
@@ -222,8 +220,6 @@ const styles = StyleSheet.create({
   content: { flex: 1 },
   form: { padding: 16, paddingBottom: 32 },
   input: { marginBottom: 12 },
-  coordInput: { flex: 1 },
-  coordsRow: { flexDirection: 'row', gap: 12 },
   row: {
     flexDirection: 'row',
     alignItems: 'center',

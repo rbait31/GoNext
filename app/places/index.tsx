@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -59,9 +59,15 @@ export default function PlacesListScreen() {
     loadPlaces();
   }, [loadPlaces]);
 
-  const handleAddPlace = () => {
+  const addPressRef = useRef(false);
+  const handleAddPlace = useCallback(() => {
+    if (addPressRef.current) return;
+    addPressRef.current = true;
     router.push('/places/new');
-  };
+    setTimeout(() => {
+      addPressRef.current = false;
+    }, 600);
+  }, [router]);
 
   const handlePlacePress = (place: Place) => {
     router.push(`/places/${place.id}`);
