@@ -15,7 +15,7 @@ import {
   IconButton,
   Text,
 } from 'react-native-paper';
-import { useFocusEffect, useRouter } from 'expo-router';
+import { useFocusEffect, useRouter, useLocalSearchParams } from 'expo-router';
 import { createPlace, addPlacePhoto } from '@/lib/dal';
 import { getAndClearMapSelection } from '@/lib/selectionStore';
 import { pickImage, takePhoto, getPhotoUri } from '@/lib/photoService';
@@ -23,6 +23,7 @@ import { parseDD, formatDD } from '@/lib/coordsUtils';
 
 export default function NewPlaceScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams<{ returnTo?: string }>();
   const theme = useTheme();
 
   const [name, setName] = useState('');
@@ -89,7 +90,12 @@ export default function NewPlaceScreen() {
       for (const path of photoPaths) {
         await addPlacePhoto(place.id, path);
       }
-      router.replace(`/places/${place.id}`);
+      const returnTo = params.returnTo;
+      if (returnTo && typeof returnTo === 'string') {
+        router.replace(returnTo as '/trips/[id]');
+      } else {
+        router.replace(`/places/${place.id}`);
+      }
     } catch (err) {
       console.error('Ошибка сохранения:', err);
       setError(

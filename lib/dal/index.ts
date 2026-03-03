@@ -5,3 +5,4 @@
 export * from './places';
 export * from './photos';
 export * from './trips';
+export * from './tripPlacePhotos';

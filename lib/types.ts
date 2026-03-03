@@ -59,7 +59,7 @@ export interface TripPlace {
 export interface TripPlaceInput {
   tripId: number;
   placeId: number;
-  order: number;
+  order?: number;
   visited?: boolean;
   visitDate?: string | null;
   notes?: string;
