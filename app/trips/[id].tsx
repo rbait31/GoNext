@@ -19,6 +19,7 @@ import {
   IconButton,
   List,
   FAB,
+  SegmentedButtons,
   useTheme,
 } from 'react-native-paper';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -66,6 +67,7 @@ export default function TripDetailScreen() {
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [placesToAdd, setPlacesToAdd] = useState<Place[]>([]);
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [viewMode, setViewMode] = useState<'plan' | 'diary'>('plan');
 
   const loadData = useCallback(async () => {
     if (isNaN(tripId)) {
@@ -247,6 +249,17 @@ export default function TripDetailScreen() {
         />
       </Appbar.Header>
 
+      <View style={styles.modeRow}>
+        <SegmentedButtons
+          value={viewMode}
+          onValueChange={(v) => setViewMode(v as 'plan' | 'diary')}
+          buttons={[
+            { value: 'plan', label: 'План', icon: 'format-list-numbered' },
+            { value: 'diary', label: 'Дневник', icon: 'notebook' },
+          ]}
+        />
+      </View>
+
       {tripPlaces.length === 0 ? (
         <View style={[styles.scroll, styles.empty]}>
           <Text variant="bodyLarge">Нет мест в маршруте</Text>
@@ -275,22 +288,38 @@ export default function TripDetailScreen() {
                     />
                   </View>
                   <View style={styles.itemMain}>
-                    <TouchableOpacity
-                      onPress={() => setExpandedId(expandedId === tp.id ? null : tp.id)}
-                      activeOpacity={1}
-                    >
-                      <View style={styles.checkboxRow}>
-                        <Checkbox
-                          status={tp.visited ? 'checked' : 'unchecked'}
-                          onPress={() => toggleVisited(tp)}
-                          color={theme.colors.primary}
-                        />
+                    {viewMode === 'plan' ? (
+                      <View style={styles.planRow}>
+                        <Text variant="labelLarge" style={styles.planNumber}>
+                          {index + 1}.
+                        </Text>
                         <Text variant="titleMedium" style={styles.placeName}>
                           {tp.place.name}
                         </Text>
                       </View>
-                    </TouchableOpacity>
-                    {expandedId === tp.id && (
+                    ) : (
+                      <>
+                        <TouchableOpacity
+                          onPress={() => setExpandedId(expandedId === tp.id ? null : tp.id)}
+                          activeOpacity={1}
+                        >
+                          <View style={styles.checkboxRow}>
+                            <Checkbox
+                              status={tp.visited ? 'checked' : 'unchecked'}
+                              onPress={() => toggleVisited(tp)}
+                              color={theme.colors.primary}
+                            />
+                            <Text variant="titleMedium" style={[styles.placeName, tp.visited && styles.visitedText]}>
+                              {tp.place.name}
+                            </Text>
+                            {tp.visited && tp.visitDate && (
+                              <Text variant="bodySmall" style={styles.visitDateBadge}>
+                                {formatDate(tp.visitDate)}
+                              </Text>
+                            )}
+                          </View>
+                        </TouchableOpacity>
+                        {expandedId === tp.id && (
                       <View style={styles.expanded}>
                         <View style={styles.dateRow}>
                           <Text variant="labelMedium">Дата визита:</Text>
@@ -350,6 +379,8 @@ export default function TripDetailScreen() {
                           </View>
                         </View>
                       </View>
+                        )}
+                      </>
                     )}
                   </View>
                   <IconButton
@@ -431,7 +462,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   emptyHint: { opacity: 0.7, marginTop: 8 },
+  modeRow: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
   card: { marginBottom: 12 },
+  planRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  planNumber: {
+    marginRight: 8,
+    opacity: 0.7,
+  },
+  visitedText: {
+    textDecorationLine: 'line-through',
+    opacity: 0.8,
+  },
+  visitDateBadge: {
+    marginLeft: 8,
+    opacity: 0.7,
+  },
   itemHeader: {
     flexDirection: 'row',
     alignItems: 'flex-start',
