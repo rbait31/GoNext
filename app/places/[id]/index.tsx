@@ -200,10 +200,18 @@ export default function PlaceDetailScreen() {
           <Button
             mode="contained-tonal"
             icon="map"
+            onPress={() => router.push(`/places/${place.id}/map`)}
+            style={styles.button}
+          >
+            Показать на карте
+          </Button>
+          <Button
+            mode="outlined"
+            icon="open-in-new"
             onPress={() => openInMap(place.lat, place.lng)}
             style={styles.button}
           >
-            Открыть на карте
+            Открыть в приложении Карты
           </Button>
           <Button
             mode="contained-tonal"

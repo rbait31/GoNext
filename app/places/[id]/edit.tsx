@@ -28,6 +28,7 @@ import type { PlacePhoto } from '@/lib/dal';
 import { getAndClearMapSelection } from '@/lib/selectionStore';
 import { pickImage, takePhoto, getPhotoUri } from '@/lib/photoService';
 import { parseDD, formatDD } from '@/lib/coordsUtils';
+import { getCurrentCoords } from '@/lib/locationService';
 
 export default function EditPlaceScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -107,6 +108,16 @@ export default function EditPlaceScreen() {
     const lat = parsed?.lat ?? 55.7558;
     const lng = parsed?.lng ?? 37.6173;
     router.push(`/places/map-picker?lat=${lat}&lng=${lng}`);
+  };
+
+  const handleMyLocation = async () => {
+    setError('');
+    const result = await getCurrentCoords();
+    if (result) {
+      setCoords(formatDD(result.lat, result.lng));
+    } else {
+      setError('Не удалось получить координаты. Разрешите доступ к геолокации.');
+    }
   };
 
   const handleSave = async () => {
@@ -220,14 +231,24 @@ export default function EditPlaceScreen() {
             style={styles.input}
           />
         </View>
-        <Button
-          mode="outlined"
-          icon="map-marker"
-          onPress={handlePickOnMap}
-          style={styles.input}
-        >
-          Выбрать на карте
-        </Button>
+        <View style={styles.coordButtons}>
+          <Button
+            mode="outlined"
+            icon="map-marker"
+            onPress={handlePickOnMap}
+            style={[styles.input, styles.coordButton]}
+          >
+            Выбрать на карте
+          </Button>
+          <Button
+            mode="outlined"
+            icon="crosshairs-gps"
+            onPress={handleMyLocation}
+            style={[styles.input, styles.coordButton]}
+          >
+            Моё местоположение
+          </Button>
+        </View>
 
         <Text variant="titleSmall" style={styles.sectionTitle}>
           Фотографии
@@ -292,6 +313,8 @@ const styles = StyleSheet.create({
   input: { marginBottom: 12 },
   coordBlock: { marginBottom: 12 },
   coordLabel: { marginBottom: 4 },
+  coordButtons: { marginBottom: 12 },
+  coordButton: { marginBottom: 8 },
   row: {
     flexDirection: 'row',
     alignItems: 'center',

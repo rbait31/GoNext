@@ -1,12 +1,15 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Appbar, Button, Text } from 'react-native-paper';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import MapView, { Marker } from 'react-native-maps';
 import { setMapSelection } from '@/lib/selectionStore';
+import { getCurrentCoords } from '@/lib/locationService';
 
 export default function MapPickerScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ lat?: string; lng?: string }>();
   const initialLat = parseFloat(params.lat ?? '55.7558') || 55.7558;
   const initialLng = parseFloat(params.lng ?? '37.6173') || 37.6173;
@@ -34,6 +37,23 @@ export default function MapPickerScreen() {
     []
   );
 
+  const mapRef = useRef<MapView>(null);
+  const handleMyLocation = useCallback(async () => {
+    const result = await getCurrentCoords();
+    if (result) {
+      setLat(result.lat);
+      setLng(result.lng);
+      const newRegion = {
+        latitude: result.lat,
+        longitude: result.lng,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      };
+      setRegion(newRegion);
+      mapRef.current?.animateToRegion(newRegion, 300);
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
       <Appbar.Header>
@@ -43,6 +63,7 @@ export default function MapPickerScreen() {
       </Appbar.Header>
 
       <MapView
+        ref={mapRef}
         style={styles.map}
         region={region}
         onRegionChangeComplete={setRegion}
@@ -51,10 +72,15 @@ export default function MapPickerScreen() {
         <Marker coordinate={{ latitude: lat, longitude: lng }} draggable onDragEnd={handleMapPress} />
       </MapView>
 
-      <View style={styles.footer}>
-        <Text variant="bodySmall">
-          {lat.toFixed(6)}, {lng.toFixed(6)}
-        </Text>
+      <View style={[styles.footer, { paddingBottom: Math.max(16, insets.bottom) }]}>
+        <View style={styles.footerLeft}>
+          <Button mode="outlined" icon="crosshairs-gps" onPress={handleMyLocation} compact>
+            Моё местоположение
+          </Button>
+          <Text variant="bodySmall" style={styles.coordsText}>
+            {lat.toFixed(6)}, {lng.toFixed(6)}
+          </Text>
+        </View>
         <Button mode="contained" onPress={handleConfirm} compact>
           Выбрать
         </Button>
@@ -75,5 +101,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
     backgroundColor: 'white',
+  },
+  footerLeft: {
+    flex: 1,
+    gap: 4,
+  },
+  coordsText: {
+    marginTop: 4,
   },
 });
