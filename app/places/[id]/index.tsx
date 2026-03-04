@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -15,7 +15,7 @@ import {
   ActivityIndicator,
   Button,
 } from 'react-native-paper';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { getPlaceById, getPlacePhotos } from '@/lib/dal';
 import type { PlacePhoto } from '@/lib/dal';
 import { getPhotoUri } from '@/lib/photoService';
@@ -96,9 +96,11 @@ export default function PlaceDetailScreen() {
     }
   }, [placeId]);
 
-  useEffect(() => {
-    loadPlace();
-  }, [loadPlace]);
+  useFocusEffect(
+    useCallback(() => {
+      loadPlace();
+    }, [loadPlace])
+  );
 
   const handleEdit = () => {
     router.push(`/places/${placeId}/edit`);
