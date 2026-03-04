@@ -108,7 +108,8 @@ _Реализация: экран `app/next.tsx`, маршрут `/next`, DAL `g
 
 ## Этап 6. Геолокация и карты
 
-- [ ] 1. Интеграция карты (expo-maps или react-native-maps)
+- [x] 1. Интеграция карты (expo-maps или react-native-maps)
+  - react-native-maps в `app/places/map-picker.tsx` (iOS/Android); на web — форма ввода в `map-picker.web.tsx`
 - [ ] 2. Отображение места на карте
 - [ ] 3. Получение координат через геолокацию или выбор точки на карте
 - [ ] 4. Ссылка на внешний навигатор (Google Maps / Apple Maps через Linking)
