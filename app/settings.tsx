@@ -44,6 +44,32 @@ export default function SettingsScreen() {
               />
             )}
           />
+          {themeMode === 'dark' && (
+            <View style={styles.colorSection}>
+              <Text variant="labelLarge" style={styles.colorLabel}>
+                {t('settings.darkThemeShade')}
+              </Text>
+              <View style={styles.colorRow}>
+                {PRIMARY_COLORS.map((hex, index) => (
+                  <Pressable
+                    key={hex}
+                    onPress={() => setPrimaryColorIndex(index)}
+                    style={[
+                      styles.colorCircle,
+                      {
+                        backgroundColor: hex,
+                        borderWidth: primaryColorIndex === index ? 3 : 0,
+                        borderColor:
+                          primaryColorIndex === index
+                            ? theme.colors.outline
+                            : 'transparent',
+                      },
+                    ]}
+                  />
+                ))}
+              </View>
+            </View>
+          )}
           <List.Subheader>{t('settings.language')}</List.Subheader>
           <List.Item
             title={t('settings.languageRu')}
@@ -65,30 +91,6 @@ export default function SettingsScreen() {
             }
             onPress={() => handleLanguageChange('en')}
           />
-          <View style={styles.colorSection}>
-            <Text variant="labelLarge" style={styles.colorLabel}>
-              {t('settings.darkThemeShade')}
-            </Text>
-            <View style={styles.colorRow}>
-              {PRIMARY_COLORS.map((hex, index) => (
-                <Pressable
-                  key={hex}
-                  onPress={() => setPrimaryColorIndex(index)}
-                  style={[
-                    styles.colorCircle,
-                    {
-                      backgroundColor: hex,
-                      borderWidth: primaryColorIndex === index ? 3 : 0,
-                      borderColor:
-                        primaryColorIndex === index
-                          ? theme.colors.outline
-                          : 'transparent',
-                    },
-                  ]}
-                />
-              ))}
-            </View>
-          </View>
         </List.Section>
       </View>
     </ScreenBackground>
