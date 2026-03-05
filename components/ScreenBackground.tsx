@@ -16,7 +16,16 @@ export function ScreenBackground({ style, children }: Props) {
   const theme = useTheme();
 
   if (theme.dark) {
-    return <View style={[{ flex: 1 }, style]}>{children}</View>;
+    return (
+      <View
+        style={[
+          { flex: 1, backgroundColor: theme.colors.background },
+          style,
+        ]}
+      >
+        {children}
+      </View>
+    );
   }
 
   return (
