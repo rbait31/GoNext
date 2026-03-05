@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  ImageBackground,
   StyleSheet,
   View,
   ScrollView,
@@ -16,6 +17,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { useFocusEffect, useRouter } from 'expo-router';
+import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
 import { getPlacesByFilter } from '@/lib/dal';
 import type { Place } from '@/lib/types';
 
@@ -74,8 +76,12 @@ export default function PlacesListScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ImageBackground
+      source={BACKGROUND_IMAGE}
+      style={styles.container}
+      resizeMode="cover"
+    >
+      <Appbar.Header style={styles.appbar}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Места" />
       </Appbar.Header>
@@ -153,12 +159,13 @@ export default function PlacesListScreen() {
         onPress={handleAddPlace}
         label="Добавить"
       />
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  appbar: { backgroundColor: 'transparent' },
   filter: {
     paddingHorizontal: 16,
     paddingVertical: 8,

@@ -4,6 +4,7 @@ import {
   StyleSheet,
   View,
   Image,
+  ImageBackground,
   Platform,
 } from 'react-native';
 import {
@@ -16,6 +17,7 @@ import {
   Text,
 } from 'react-native-paper';
 import { useFocusEffect, useRouter, useLocalSearchParams } from 'expo-router';
+import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
 import { createPlace, addPlacePhoto } from '@/lib/dal';
 import { getAndClearMapSelection } from '@/lib/selectionStore';
 import { pickImage, takePhoto, getPhotoUri } from '@/lib/photoService';
@@ -120,8 +122,8 @@ export default function NewPlaceScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
+      <Appbar.Header style={styles.appbar}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Новое место" />
       </Appbar.Header>
@@ -246,12 +248,13 @@ export default function NewPlaceScreen() {
           Сохранить
         </Button>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  appbar: { backgroundColor: 'transparent' },
   content: { flex: 1 },
   form: { padding: 16, paddingBottom: 32 },
   input: { marginBottom: 12 },

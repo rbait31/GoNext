@@ -6,6 +6,7 @@ import {
   Linking,
   Platform,
   Image,
+  ImageBackground,
   Modal,
   Pressable,
   Dimensions,
@@ -19,6 +20,7 @@ import {
   Button,
 } from 'react-native-paper';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
 import { getPlaceById, getPlacePhotos } from '@/lib/dal';
 import type { PlacePhoto } from '@/lib/dal';
 import { getPhotoUri } from '@/lib/photoService';
@@ -112,35 +114,35 @@ export default function PlaceDetailScreen() {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <Appbar.Header>
+      <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
+        <Appbar.Header style={styles.appbar}>
           <Appbar.BackAction onPress={() => router.back()} />
           <Appbar.Content title="Место" />
         </Appbar.Header>
         <View style={styles.center}>
           <ActivityIndicator size="large" />
         </View>
-      </View>
+      </ImageBackground>
     );
   }
 
   if (error || !place) {
     return (
-      <View style={styles.container}>
-        <Appbar.Header>
+      <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
+        <Appbar.Header style={styles.appbar}>
           <Appbar.BackAction onPress={() => router.back()} />
           <Appbar.Content title="Место" />
         </Appbar.Header>
         <View style={styles.center}>
           <Text variant="bodyLarge">{error || 'Место не найдено'}</Text>
         </View>
-      </View>
+      </ImageBackground>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
+      <Appbar.Header style={styles.appbar}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title={place.name} />
         <Appbar.Action icon="pencil" onPress={handleEdit} />
@@ -262,12 +264,13 @@ export default function PlaceDetailScreen() {
           </Button>
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  appbar: { backgroundColor: 'transparent' },
   center: {
     flex: 1,
     justifyContent: 'center',

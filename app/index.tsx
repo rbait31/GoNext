@@ -1,4 +1,5 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ImageBackground } from 'react-native';
+import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
 import { Appbar, Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 
@@ -6,8 +7,12 @@ export default function HomeScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ImageBackground
+      source={BACKGROUND_IMAGE}
+      style={styles.container}
+      resizeMode="cover"
+    >
+      <Appbar.Header style={styles.appbar}>
         <Appbar.Content title="GoNext" />
       </Appbar.Header>
 
@@ -45,13 +50,16 @@ export default function HomeScreen() {
           Настройки
         </Button>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  appbar: {
+    backgroundColor: 'transparent',
   },
   content: {
     flex: 1,

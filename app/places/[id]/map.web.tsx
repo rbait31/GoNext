@@ -2,9 +2,10 @@
  * Web: карты нет — показываем координаты и ссылку на Google Maps
  */
 import { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View, Linking } from 'react-native';
+import { StyleSheet, View, ImageBackground, Linking } from 'react-native';
 import { Appbar, Button, Text, ActivityIndicator } from 'react-native-paper';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
 import { getPlaceById } from '@/lib/dal';
 import type { Place } from '@/lib/types';
 
@@ -38,15 +39,15 @@ export default function PlaceMapWebScreen() {
 
   if (loading || !place) {
     return (
-      <View style={styles.container}>
-        <Appbar.Header>
+      <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
+        <Appbar.Header style={styles.appbar}>
           <Appbar.BackAction onPress={() => router.back()} />
           <Appbar.Content title="Место на карте" />
         </Appbar.Header>
         <View style={styles.center}>
           <ActivityIndicator size="large" />
         </View>
-      </View>
+      </ImageBackground>
     );
   }
 
@@ -54,8 +55,8 @@ export default function PlaceMapWebScreen() {
   const navUrl = `https://www.google.com/maps/dir/?api=1&destination=${place.lat},${place.lng}`;
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
+      <Appbar.Header style={styles.appbar}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title={place.name} subtitle="Координаты" />
       </Appbar.Header>
@@ -82,12 +83,13 @@ export default function PlaceMapWebScreen() {
           Построить маршрут
         </Button>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  appbar: { backgroundColor: 'transparent' },
   center: {
     flex: 1,
     justifyContent: 'center',

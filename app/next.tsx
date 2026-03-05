@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View, Platform, Linking } from 'react-native';
+import { StyleSheet, View, ImageBackground, Platform, Linking } from 'react-native';
 import {
   Appbar,
   Card,
@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native-paper';
 import { useFocusEffect, useRouter } from 'expo-router';
+import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
 import { getNextPlace, getCurrentTrip, getTripPlacesWithPlace } from '@/lib/dal';
 
 function openInMap(lat: number, lng: number) {
@@ -69,15 +70,15 @@ export default function NextPlaceScreen() {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <Appbar.Header>
+      <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
+        <Appbar.Header style={styles.appbar}>
           <Appbar.BackAction onPress={() => router.back()} />
           <Appbar.Content title="Следующее место" />
         </Appbar.Header>
         <View style={styles.center}>
           <ActivityIndicator size="large" />
         </View>
-      </View>
+      </ImageBackground>
     );
   }
 
@@ -85,8 +86,8 @@ export default function NextPlaceScreen() {
     const { trip, tripPlace } = data;
     const { place } = tripPlace;
     return (
-      <View style={styles.container}>
-        <Appbar.Header>
+      <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
+        <Appbar.Header style={styles.appbar}>
           <Appbar.BackAction onPress={() => router.back()} />
           <Appbar.Content title="Следующее место" />
         </Appbar.Header>
@@ -140,13 +141,13 @@ export default function NextPlaceScreen() {
             </Button>
           </View>
         </View>
-      </View>
+      </ImageBackground>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
+      <Appbar.Header style={styles.appbar}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Следующее место" />
       </Appbar.Header>
@@ -169,12 +170,13 @@ export default function NextPlaceScreen() {
           Перейти к поездкам
         </Button>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  appbar: { backgroundColor: 'transparent' },
   center: {
     flex: 1,
     justifyContent: 'center',

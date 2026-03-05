@@ -1,9 +1,10 @@
 import { useState, useCallback, useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ImageBackground } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Appbar, Button, Text } from 'react-native-paper';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import MapView, { Marker } from 'react-native-maps';
+import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
 import { setMapSelection } from '@/lib/selectionStore';
 import { getCurrentCoords } from '@/lib/locationService';
 
@@ -55,8 +56,8 @@ export default function MapPickerScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
+      <Appbar.Header style={styles.appbar}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Выбрать на карте" />
         <Appbar.Action icon="check" onPress={handleConfirm} />
@@ -85,12 +86,13 @@ export default function MapPickerScreen() {
           Выбрать
         </Button>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  appbar: { backgroundColor: 'transparent' },
   map: {
     flex: 1,
     width: '100%',

@@ -2,9 +2,10 @@
  * Web-версия выбора координат — только форма ввода (react-native-maps не поддерживает web)
  */
 import { useState, useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ImageBackground } from 'react-native';
 import { Appbar, Button, TextInput, Text, useTheme } from 'react-native-paper';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
 import { setMapSelection } from '@/lib/selectionStore';
 import { parseDD, formatDD } from '@/lib/coordsUtils';
 
@@ -26,8 +27,8 @@ export default function MapPickerScreen() {
   }, [coords, router]);
 
   return (
-    <View style={styles.container}>
-      <Appbar.Header>
+    <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
+      <Appbar.Header style={styles.appbar}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Выбрать координаты" />
       </Appbar.Header>
@@ -55,12 +56,13 @@ export default function MapPickerScreen() {
           Выбрать
         </Button>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  appbar: { backgroundColor: 'transparent' },
   webForm: {
     padding: 16,
     gap: 12,
