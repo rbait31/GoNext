@@ -7,7 +7,7 @@ import {
   Platform,
   Image,
   Modal,
-  TouchableOpacity,
+  Pressable,
 } from 'react-native';
 import {
   Appbar,
@@ -289,19 +289,24 @@ export default function TripDetailScreen() {
                   </View>
                   <View style={styles.itemMain}>
                     {viewMode === 'plan' ? (
-                      <View style={styles.planRow}>
-                        <Text variant="labelLarge" style={styles.planNumber}>
-                          {index + 1}.
-                        </Text>
-                        <Text variant="titleMedium" style={styles.placeName}>
-                          {tp.place.name}
-                        </Text>
-                      </View>
+                      <Pressable
+                        style={styles.tappableArea}
+                        onPress={() => router.push(`/places/${tp.placeId}`)}
+                      >
+                        <View style={styles.planRow}>
+                          <Text variant="labelLarge" style={styles.planNumber}>
+                            {index + 1}.
+                          </Text>
+                          <Text variant="titleMedium" style={styles.placeName}>
+                            {tp.place.name}
+                          </Text>
+                        </View>
+                      </Pressable>
                     ) : (
                       <>
-                        <TouchableOpacity
+                        <Pressable
+                          style={styles.tappableArea}
                           onPress={() => setExpandedId(expandedId === tp.id ? null : tp.id)}
-                          activeOpacity={1}
                         >
                           <View style={styles.checkboxRow}>
                             <Checkbox
@@ -318,7 +323,7 @@ export default function TripDetailScreen() {
                               </Text>
                             )}
                           </View>
-                        </TouchableOpacity>
+                        </Pressable>
                         {expandedId === tp.id && (
                       <View style={styles.expanded}>
                         <View style={styles.dateRow}>
@@ -491,6 +496,7 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   itemMain: { flex: 1 },
+  tappableArea: { flex: 1, alignSelf: 'stretch' },
   checkboxRow: {
     flexDirection: 'row',
     alignItems: 'center',

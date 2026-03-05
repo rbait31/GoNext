@@ -6,6 +6,9 @@ import {
   Linking,
   Platform,
   Image,
+  Modal,
+  Pressable,
+  Dimensions,
 } from 'react-native';
 import {
   Appbar,
@@ -65,6 +68,7 @@ export default function PlaceDetailScreen() {
   const [photos, setPhotos] = useState<PlacePhoto[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [fullScreenPhotoUri, setFullScreenPhotoUri] = useState<string | null>(null);
 
   const placeId = id ? parseInt(String(id), 10) : NaN;
 
@@ -176,16 +180,51 @@ export default function PlaceDetailScreen() {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {photos.map((ph) => (
-                  <Image
+                  <Pressable
                     key={ph.id}
-                    source={{ uri: getPhotoUri(ph.filePath) }}
-                    style={styles.photoThumb}
-                  />
+                    onPress={() =>
+                      setFullScreenPhotoUri(getPhotoUri(ph.filePath))
+                    }
+                  >
+                    <Image
+                      source={{ uri: getPhotoUri(ph.filePath) }}
+                      style={styles.photoThumb}
+                    />
+                  </Pressable>
                 ))}
               </ScrollView>
             </Card.Content>
           </Card>
         )}
+
+        <Modal
+          visible={!!fullScreenPhotoUri}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setFullScreenPhotoUri(null)}
+        >
+          <View style={styles.fullScreenOverlay}>
+            <Appbar.Header style={styles.fullScreenHeader}>
+              <Appbar.BackAction
+                onPress={() => setFullScreenPhotoUri(null)}
+                color="#fff"
+              />
+              <Appbar.Content title="" />
+            </Appbar.Header>
+            <Pressable
+              style={styles.fullScreenImageWrap}
+              onPress={() => setFullScreenPhotoUri(null)}
+            >
+              {fullScreenPhotoUri ? (
+                <Image
+                  source={{ uri: fullScreenPhotoUri }}
+                  style={styles.fullScreenImage}
+                  resizeMode="contain"
+                />
+              ) : null}
+            </Pressable>
+          </View>
+        </Modal>
 
         <Card mode="elevated" style={styles.card}>
           <Card.Content>
@@ -269,5 +308,26 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 8,
     marginRight: 8,
+  },
+  fullScreenOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.95)',
+  },
+  fullScreenHeader: {
+    backgroundColor: 'transparent',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    zIndex: 1,
+  },
+  fullScreenImageWrap: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fullScreenImage: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
   },
 });
