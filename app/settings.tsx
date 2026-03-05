@@ -1,5 +1,4 @@
 import { StyleSheet, View, Pressable } from 'react-native';
-import Constants from 'expo-constants';
 import { Appbar, Text, List, Switch, useTheme } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
@@ -33,7 +32,6 @@ export default function SettingsScreen() {
 
       <View style={styles.content}>
         <List.Section>
-          <List.Subheader>{t('settings.appearance')}</List.Subheader>
           <List.Item
             title={t('settings.darkTheme')}
             left={(props) => <List.Icon {...props} icon="weather-night" />}
@@ -71,10 +69,12 @@ export default function SettingsScreen() {
               </View>
             </View>
           )}
-          <List.Subheader>{t('settings.language')}</List.Subheader>
+          <List.Item
+            title={t('settings.language')}
+            left={(props) => <List.Icon {...props} icon="translate" />}
+          />
           <List.Item
             title={t('settings.languageRu')}
-            left={(props) => <List.Icon {...props} icon="translate" />}
             right={(props) =>
               i18n.language === 'ru' ? (
                 <List.Icon {...props} icon="check" color={theme.colors.primary} />
@@ -84,7 +84,6 @@ export default function SettingsScreen() {
           />
           <List.Item
             title={t('settings.languageEn')}
-            left={(props) => <List.Icon {...props} icon="translate" />}
             right={(props) =>
               i18n.language === 'en' ? (
                 <List.Icon {...props} icon="check" color={theme.colors.primary} />
@@ -94,10 +93,8 @@ export default function SettingsScreen() {
           />
         </List.Section>
         <List.Section>
-          <List.Subheader>{t('settings.about')}</List.Subheader>
           <List.Item
             title={t('settings.about')}
-            description={Constants.expoConfig?.version ?? '1.0.0'}
             left={(props) => <List.Icon {...props} icon="information" />}
             right={(props) => <List.Icon {...props} icon="chevron-right" />}
             onPress={() => router.push('/about')}
