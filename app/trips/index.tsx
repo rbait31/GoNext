@@ -14,15 +14,18 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { ScreenBackground } from '@/components/ScreenBackground';
+import i18n from '@/lib/i18n';
 import { getAllTrips } from '@/lib/dal';
 import type { Trip } from '@/lib/types';
 
 function formatDateRange(startDate: string, endDate: string): string {
+  const locale = i18n.language === 'en' ? 'en-US' : 'ru-RU';
   const fmt = (s: string) => {
     const d = new Date(s);
-    return d.toLocaleDateString('ru-RU', {
+    return d.toLocaleDateString(locale, {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
@@ -34,6 +37,7 @@ function formatDateRange(startDate: string, endDate: string): string {
 export default function TripsListScreen() {
   const router = useRouter();
   const theme = useTheme();
+  const { t } = useTranslation();
   const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -81,7 +85,7 @@ export default function TripsListScreen() {
     <ScreenBackground style={styles.container}>
       <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="Поездки" />
+        <Appbar.Content title={t('trips.title')} />
       </Appbar.Header>
 
       {loading && !refreshing ? (
@@ -91,10 +95,10 @@ export default function TripsListScreen() {
       ) : trips.length === 0 ? (
         <View style={styles.center}>
           <Text variant="bodyLarge" style={styles.emptyText}>
-            Нет поездок
+            {t('trips.empty')}
           </Text>
           <Text variant="bodyMedium" style={styles.emptyHint}>
-            Нажмите + чтобы добавить
+            {t('trips.emptyHint')}
           </Text>
         </View>
       ) : (
@@ -143,7 +147,7 @@ export default function TripsListScreen() {
         icon="plus"
         style={[styles.fab, { backgroundColor: theme.colors.primary }]}
         onPress={handleAddTrip}
-        label="Добавить"
+        label={t('trips.add')}
       />
     </ScreenBackground>
   );

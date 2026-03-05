@@ -8,11 +8,13 @@ import {
   useTheme,
   Text,
 } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import { ScreenBackground } from '@/components/ScreenBackground';
 import { createTrip } from '@/lib/dal';
 
 export default function NewTripScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const theme = useTheme();
 
@@ -27,7 +29,7 @@ export default function NewTripScreen() {
 
   const handleSave = async () => {
     if (!title.trim()) {
-      setError('Введите название поездки');
+      setError(t('tripNew.nameRequired'));
       return;
     }
     setError('');
@@ -45,8 +47,8 @@ export default function NewTripScreen() {
       console.error('Ошибка сохранения:', err);
       setError(
         Platform.OS === 'web'
-          ? 'БД недоступна на web. Используйте приложение на устройстве.'
-          : 'Не удалось сохранить'
+          ? t('tripNew.dbError')
+          : t('placeEdit.saveError')
       );
     } finally {
       setSaving(false);
@@ -57,19 +59,19 @@ export default function NewTripScreen() {
     <ScreenBackground style={styles.container}>
       <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="Новая поездка" />
+        <Appbar.Content title={t('tripNew.title')} />
       </Appbar.Header>
 
       <ScrollView style={styles.content} contentContainerStyle={styles.form}>
         <TextInput
-          label="Название *"
+          label={`${t('tripNew.name')} *`}
           value={title}
           onChangeText={setTitle}
           mode="outlined"
           style={styles.input}
         />
         <TextInput
-          label="Описание"
+          label={t('tripNew.description')}
           value={description}
           onChangeText={setDescription}
           mode="outlined"
@@ -78,7 +80,7 @@ export default function NewTripScreen() {
           style={styles.input}
         />
         <TextInput
-          label="Дата начала"
+          label={t('tripNew.startDate')}
           value={startDate}
           onChangeText={setStartDate}
           mode="outlined"
@@ -87,7 +89,7 @@ export default function NewTripScreen() {
           style={styles.input}
         />
         <TextInput
-          label="Дата окончания"
+          label={t('tripNew.endDate')}
           value={endDate}
           onChangeText={setEndDate}
           mode="outlined"
@@ -102,7 +104,7 @@ export default function NewTripScreen() {
             color={theme.colors.primary}
           />
           <Button mode="text" onPress={() => setCurrent(!current)}>
-            Текущая поездка
+            {t('tripNew.current')}
           </Button>
         </View>
 
@@ -118,7 +120,7 @@ export default function NewTripScreen() {
           disabled={saving}
           style={styles.saveButton}
         >
-          Создать
+          {t('tripNew.create')}
         </Button>
       </ScrollView>
     </ScreenBackground>

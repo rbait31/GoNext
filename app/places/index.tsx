@@ -15,6 +15,7 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { ScreenBackground } from '@/components/ScreenBackground';
 import { getPlacesByFilter } from '@/lib/dal';
@@ -25,6 +26,7 @@ type Filter = 'all' | 'visitlater' | 'liked';
 export default function PlacesListScreen() {
   const router = useRouter();
   const theme = useTheme();
+  const { t } = useTranslation();
   const [places, setPlaces] = useState<Place[]>([]);
   const [filter, setFilter] = useState<Filter>('all');
   const [loading, setLoading] = useState(true);
@@ -78,7 +80,7 @@ export default function PlacesListScreen() {
     <ScreenBackground style={styles.container}>
       <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="Места" />
+        <Appbar.Content title={t('places.title')} />
       </Appbar.Header>
 
       <View style={styles.filter}>
@@ -86,9 +88,9 @@ export default function PlacesListScreen() {
           value={filter}
           onValueChange={(v) => setFilter(v as Filter)}
           buttons={[
-            { value: 'all', label: 'Все' },
-            { value: 'visitlater', label: 'Посетить' },
-            { value: 'liked', label: 'Понравилось' },
+            { value: 'all', label: t('places.all') },
+            { value: 'visitlater', label: t('places.visitlater') },
+            { value: 'liked', label: t('places.liked') },
           ]}
         />
       </View>
@@ -100,10 +102,10 @@ export default function PlacesListScreen() {
       ) : places.length === 0 ? (
         <View style={styles.center}>
           <Text variant="bodyLarge" style={styles.emptyText}>
-            Нет мест
+            {t('places.empty')}
           </Text>
           <Text variant="bodyMedium" style={styles.emptyHint}>
-            Нажмите + чтобы добавить
+            {t('places.emptyHint')}
           </Text>
         </View>
       ) : (
@@ -152,7 +154,7 @@ export default function PlacesListScreen() {
         icon="plus"
         style={[styles.fab, { backgroundColor: theme.colors.primary }]}
         onPress={handleAddPlace}
-        label="Добавить"
+        label={t('places.add')}
       />
     </ScreenBackground>
   );

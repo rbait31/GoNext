@@ -22,6 +22,7 @@ import {
   SegmentedButtons,
   useTheme,
 } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScreenBackground } from '@/components/ScreenBackground';
 import {
@@ -38,14 +39,15 @@ import {
 } from '@/lib/dal';
 import type { TripPlaceWithPlace } from '@/lib/types';
 import type { TripPlacePhoto } from '@/lib/dal';
+import i18n from '@/lib/i18n';
 import { getPhotoUri } from '@/lib/photoService';
 import { pickImage, takePhoto } from '@/lib/photoService';
 import type { Trip, Place } from '@/lib/types';
 
-function formatDate(iso: string): string {
+function formatDate(iso: string, locale: string): string {
   try {
     const d = new Date(iso);
-    return d.toLocaleDateString('ru-RU', {
+    return d.toLocaleDateString(locale, {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
@@ -56,6 +58,7 @@ function formatDate(iso: string): string {
 }
 
 export default function TripDetailScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const theme = useTheme();
@@ -231,7 +234,7 @@ export default function TripDetailScreen() {
       <ScreenBackground style={styles.container}>
         <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
           <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Поездка" />
+          <Appbar.Content title={t('tripDetail.title')} />
         </Appbar.Header>
         <View style={styles.center}>
           <ActivityIndicator size="large" />
@@ -246,7 +249,7 @@ export default function TripDetailScreen() {
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content
           title={trip.title}
-          subtitle={`${formatDate(trip.startDate)} — ${formatDate(trip.endDate)}`}
+          subtitle={`${formatDate(trip.startDate, i18n.language === 'en' ? 'en-US' : 'ru-RU')} — ${formatDate(trip.endDate, i18n.language === 'en' ? 'en-US' : 'ru-RU')}`}
         />
       </Appbar.Header>
 
@@ -255,17 +258,17 @@ export default function TripDetailScreen() {
           value={viewMode}
           onValueChange={(v) => setViewMode(v as 'plan' | 'diary')}
           buttons={[
-            { value: 'plan', label: 'План', icon: 'format-list-numbered' },
-            { value: 'diary', label: 'Дневник', icon: 'notebook' },
+            { value: 'plan', label: t('tripDetail.plan'), icon: 'format-list-numbered' },
+            { value: 'diary', label: t('tripDetail.diary'), icon: 'notebook' },
           ]}
         />
       </View>
 
       {tripPlaces.length === 0 ? (
         <View style={[styles.scroll, styles.empty]}>
-          <Text variant="bodyLarge">Нет мест в маршруте</Text>
+          <Text variant="bodyLarge">{t('tripDetail.empty')}</Text>
           <Text variant="bodyMedium" style={styles.emptyHint}>
-            Нажмите + чтобы добавить
+            {t('tripDetail.emptyHint')}
           </Text>
         </View>
       ) : (
@@ -320,7 +323,7 @@ export default function TripDetailScreen() {
                             </Text>
                             {tp.visited && tp.visitDate && (
                               <Text variant="bodySmall" style={styles.visitDateBadge}>
-                                {formatDate(tp.visitDate)}
+                                {formatDate(tp.visitDate ?? '', i18n.language === 'en' ? 'en-US' : 'ru-RU')}
                               </Text>
                             )}
                           </View>
@@ -328,7 +331,7 @@ export default function TripDetailScreen() {
                         {expandedId === tp.id && (
                       <View style={styles.expanded}>
                         <View style={styles.dateRow}>
-                          <Text variant="labelMedium">Дата визита:</Text>
+                          <Text variant="labelMedium">{t('tripDetail.visitDate')}</Text>
                           <TextInput
                             mode="outlined"
                             value={tp.visitDate ?? ''}
@@ -340,7 +343,7 @@ export default function TripDetailScreen() {
                         </View>
                         <TextInput
                           mode="outlined"
-                          label="Заметки"
+                          label={t('tripDetail.notes')}
                           value={tp.notes}
                           onChangeText={(t) => updateNotes(tp, t)}
                           multiline
@@ -348,7 +351,7 @@ export default function TripDetailScreen() {
                           style={styles.notesInput}
                         />
                         <View style={styles.photoSection}>
-                          <Text variant="labelMedium">Фото</Text>
+                          <Text variant="labelMedium">{t('tripDetail.photos')}</Text>
                           <View style={styles.photoRow}>
                             {(photosByTripPlace[tp.id] ?? []).map((ph) => (
                               <View key={ph.id} style={styles.photoWrap}>
@@ -370,7 +373,7 @@ export default function TripDetailScreen() {
                               compact
                               onPress={() => addPhotoToTripPlace(tp.id, pickImage)}
                             >
-                              Галерея
+                              {t('tripDetail.gallery')}
                             </Button>
                             {Platform.OS !== 'web' && (
                               <Button
@@ -379,7 +382,7 @@ export default function TripDetailScreen() {
                                 compact
                                 onPress={() => addPhotoToTripPlace(tp.id, takePhoto)}
                               >
-                                Камера
+                                {t('tripDetail.camera')}
                               </Button>
                             )}
                           </View>
@@ -405,7 +408,7 @@ export default function TripDetailScreen() {
         icon="plus"
         style={[styles.fab, { backgroundColor: theme.colors.primary }]}
         onPress={openAddModal}
-        label="Добавить место"
+        label={t('tripDetail.addPlace')}
       />
 
       <Modal
@@ -416,7 +419,7 @@ export default function TripDetailScreen() {
         <View style={styles.modal}>
           <Appbar.Header>
             <Appbar.BackAction onPress={() => setAddModalVisible(false)} />
-            <Appbar.Content title="Добавить место" />
+            <Appbar.Content title={t('tripDetail.addPlace')} />
           </Appbar.Header>
           <Button
             mode="contained-tonal"
@@ -424,12 +427,12 @@ export default function TripDetailScreen() {
             onPress={goToNewPlace}
             style={styles.newPlaceBtn}
           >
-            Создать новое место
+            {t('tripDetail.createNew')}
           </Button>
           <ScrollView style={styles.modalList}>
             {placesToAdd.length === 0 ? (
               <Text variant="bodyMedium" style={styles.emptyHint}>
-                Нет доступных мест. Создайте новое.
+                {t('tripDetail.noPlacesToAdd')}
               </Text>
             ) : (
               placesToAdd.map((place) => (

@@ -1,16 +1,18 @@
 import { StyleSheet, View } from 'react-native';
 import { Appbar, Button, useTheme } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import { ScreenBackground } from '@/components/ScreenBackground';
 
 export default function HomeScreen() {
   const router = useRouter();
   const theme = useTheme();
+  const { t } = useTranslation();
 
   return (
     <ScreenBackground style={styles.container}>
       <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
-        <Appbar.Content title="GoNext" />
+        <Appbar.Content title={t('home.title')} />
       </Appbar.Header>
 
       <View style={styles.content}>
@@ -20,7 +22,7 @@ export default function HomeScreen() {
           style={styles.button}
           icon="map-marker"
         >
-          Места
+          {t('home.places')}
         </Button>
         <Button
           mode="contained"
@@ -28,7 +30,7 @@ export default function HomeScreen() {
           style={styles.button}
           icon="map"
         >
-          Поездки
+          {t('home.trips')}
         </Button>
         <Button
           mode="contained"
@@ -36,7 +38,7 @@ export default function HomeScreen() {
           style={styles.button}
           icon="compass"
         >
-          Следующее место
+          {t('home.nextPlace')}
         </Button>
         <Button
           mode="contained"
@@ -44,7 +46,7 @@ export default function HomeScreen() {
           style={styles.button}
           icon="cog"
         >
-          Настройки
+          {t('home.settings')}
         </Button>
       </View>
     </ScreenBackground>

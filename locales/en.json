@@ -1,0 +1,158 @@
+{
+  "common": {
+    "back": "Back",
+    "save": "Save",
+    "add": "Add",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "loading": "Loading..."
+  },
+  "home": {
+    "title": "GoNext",
+    "places": "Places",
+    "trips": "Trips",
+    "nextPlace": "Next place",
+    "settings": "Settings"
+  },
+  "places": {
+    "title": "Places",
+    "add": "Add",
+    "all": "All",
+    "visitlater": "Visit later",
+    "liked": "Liked",
+    "empty": "No places",
+    "emptyHint": "Tap + to add"
+  },
+  "placeDetail": {
+    "place": "Place",
+    "placeNotFound": "Place not found",
+    "invalidId": "Invalid place ID",
+    "dbError": "Failed to load place",
+    "dbErrorWeb": "Database unavailable on web. Use the app on device.",
+    "visitLater": "Visit later",
+    "liked": "Liked",
+    "added": "Added",
+    "photos": "Photos",
+    "coords": "Coordinates",
+    "showOnMap": "Show on map",
+    "openInMaps": "Open in Maps app",
+    "route": "Route"
+  },
+  "placeEdit": {
+    "title": "Edit place",
+    "name": "Name",
+    "description": "Description",
+    "visitlater": "Visit later",
+    "liked": "Liked",
+    "coords": "Coordinates (DD)",
+    "coordsPlaceholder": "55.7558, 37.6173",
+    "pickOnMap": "Pick on map",
+    "myLocation": "My location",
+    "photos": "Photos",
+    "gallery": "Gallery",
+    "camera": "Camera",
+    "save": "Save",
+    "nameRequired": "Enter name",
+    "coordsInvalid": "Enter coordinates as: latitude, longitude",
+    "saveError": "Failed to save",
+    "dbError": "DB unavailable on web.",
+    "locationError": "Failed to get coordinates. Allow location access."
+  },
+  "placeNew": {
+    "title": "New place",
+    "name": "Name",
+    "description": "Description",
+    "visitlater": "Visit later",
+    "liked": "Liked",
+    "coords": "Coordinates (DD)",
+    "coordsPlaceholder": "55.7558, 37.6173",
+    "pickOnMap": "Pick on map",
+    "myLocation": "My location",
+    "photos": "Photos",
+    "gallery": "Gallery",
+    "camera": "Camera",
+    "save": "Save",
+    "nameRequired": "Enter name",
+    "coordsInvalid": "Enter coordinates as: latitude, longitude",
+    "dbError": "DB unavailable on web. Use the app on device.",
+    "locationError": "Failed to get coordinates. Allow location access."
+  },
+  "placeMap": {
+    "title": "Place on map",
+    "coords": "Coordinates",
+    "openInMaps": "Open in Maps app",
+    "route": "Route"
+  },
+  "mapPicker": {
+    "title": "Pick on map",
+    "myLocation": "My location",
+    "select": "Select"
+  },
+  "mapPickerWeb": {
+    "title": "Enter coordinates",
+    "hint": "Enter coordinates in DD format (latitude, longitude) or use the app on your phone to pick on map.",
+    "coords": "Coordinates (DD)",
+    "select": "Select"
+  },
+  "placeMapWeb": {
+    "title": "Coordinates",
+    "hint": "Map unavailable on web. Open in app or via link:",
+    "openInGoogleMaps": "Open in Google Maps",
+    "buildRoute": "Build route"
+  },
+  "trips": {
+    "title": "Trips",
+    "add": "Add",
+    "empty": "No trips",
+    "emptyHint": "Tap + to add"
+  },
+  "tripNew": {
+    "title": "New trip",
+    "name": "Name",
+    "description": "Description",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "current": "Current trip",
+    "create": "Create",
+    "nameRequired": "Enter trip name",
+    "dbError": "DB unavailable on web. Use the app on device.",
+    "locationError": "Failed to get coordinates. Allow location access."
+  },
+  "tripDetail": {
+    "title": "Trip",
+    "plan": "Plan",
+    "diary": "Diary",
+    "empty": "No places in route",
+    "emptyHint": "Tap + to add",
+    "addPlace": "Add place",
+    "createNew": "Create new place",
+    "noPlacesToAdd": "No places available. Create new one.",
+    "visitDate": "Visit date:",
+    "notes": "Notes",
+    "photos": "Photos",
+    "gallery": "Gallery",
+    "camera": "Camera"
+  },
+  "nextPlace": {
+    "title": "Next place",
+    "orderHint": "Item {{order}} in route",
+    "openOnMap": "Open on map",
+    "openInNav": "Open in navigator",
+    "placeCard": "Place card",
+    "tripRoute": "Trip route",
+    "noTrip": "No active trip",
+    "allVisited": "All places visited",
+    "noTripHint": "Select current trip in trips list or create new one.",
+    "allVisitedHint": "You visited all places in the route. Great!",
+    "goToTrips": "Go to trips"
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "darkTheme": "Dark theme",
+    "darkThemeShade": "Dark theme shade",
+    "language": "Language",
+    "languageRu": "Русский",
+    "languageEn": "English"
+  }
+}

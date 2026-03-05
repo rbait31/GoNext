@@ -4,12 +4,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View, Linking } from 'react-native';
 import { Appbar, Button, Text, ActivityIndicator, useTheme } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScreenBackground } from '@/components/ScreenBackground';
 import { getPlaceById } from '@/lib/dal';
 import type { Place } from '@/lib/types';
 
 export default function PlaceMapWebScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const theme = useTheme();
@@ -43,7 +45,7 @@ export default function PlaceMapWebScreen() {
       <ScreenBackground style={styles.container}>
         <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
           <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Место на карте" />
+          <Appbar.Content title={t('placeMapWeb.title')} />
         </Appbar.Header>
         <View style={styles.center}>
           <ActivityIndicator size="large" />
@@ -59,14 +61,14 @@ export default function PlaceMapWebScreen() {
     <ScreenBackground style={styles.container}>
       <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title={place.name} subtitle="Координаты" />
+        <Appbar.Content title={place.name} subtitle={t('placeMapWeb.title')} />
       </Appbar.Header>
       <View style={styles.content}>
         <Text variant="bodyLarge" style={styles.coords}>
           {place.lat.toFixed(6)}, {place.lng.toFixed(6)}
         </Text>
         <Text variant="bodySmall" style={styles.hint}>
-          На web карта недоступна. Откройте в приложении или по ссылке:
+          {t('placeMapWeb.hint')}
         </Text>
         <Button
           mode="contained-tonal"
@@ -74,14 +76,14 @@ export default function PlaceMapWebScreen() {
           onPress={() => Linking.openURL(mapsUrl)}
           style={styles.button}
         >
-          Открыть в Google Картах
+          {t('placeMapWeb.openInGoogleMaps')}
         </Button>
         <Button
           mode="contained-tonal"
           icon="navigation"
           onPress={() => Linking.openURL(navUrl)}
         >
-          Построить маршрут
+          {t('placeMapWeb.buildRoute')}
         </Button>
       </View>
     </ScreenBackground>

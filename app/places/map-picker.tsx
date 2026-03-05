@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Appbar, Button, Text, useTheme } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import MapView, { Marker } from 'react-native-maps';
 import { ScreenBackground } from '@/components/ScreenBackground';
@@ -9,6 +10,7 @@ import { setMapSelection } from '@/lib/selectionStore';
 import { getCurrentCoords } from '@/lib/locationService';
 
 export default function MapPickerScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
@@ -60,7 +62,7 @@ export default function MapPickerScreen() {
     <ScreenBackground style={styles.container}>
       <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="Выбрать на карте" />
+        <Appbar.Content title={t('mapPicker.title')} />
         <Appbar.Action icon="check" onPress={handleConfirm} />
       </Appbar.Header>
 
@@ -77,14 +79,14 @@ export default function MapPickerScreen() {
       <View style={[styles.footer, { paddingBottom: Math.max(16, insets.bottom) }]}>
         <View style={styles.footerLeft}>
           <Button mode="outlined" icon="crosshairs-gps" onPress={handleMyLocation} compact>
-            Моё местоположение
+            {t('mapPicker.myLocation')}
           </Button>
           <Text variant="bodySmall" style={styles.coordsText}>
             {lat.toFixed(6)}, {lng.toFixed(6)}
           </Text>
         </View>
         <Button mode="contained" onPress={handleConfirm} compact>
-          Выбрать
+          {t('mapPicker.select')}
         </Button>
       </View>
     </ScreenBackground>

@@ -4,12 +4,14 @@
 import { useState, useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Appbar, Button, TextInput, Text, useTheme } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScreenBackground } from '@/components/ScreenBackground';
 import { setMapSelection } from '@/lib/selectionStore';
 import { parseDD, formatDD } from '@/lib/coordsUtils';
 
 export default function MapPickerScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const theme = useTheme();
   const params = useLocalSearchParams<{ lat?: string; lng?: string }>();
@@ -30,30 +32,30 @@ export default function MapPickerScreen() {
     <ScreenBackground style={styles.container}>
       <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="Выбрать координаты" />
+        <Appbar.Content title={t('mapPickerWeb.title')} />
       </Appbar.Header>
       <View style={styles.webForm}>
         <Text variant="bodyMedium" style={styles.hint}>
-          Введите координаты в формате DD (широта, долгота) или используйте приложение на телефоне для выбора на карте.
+          {t('mapPickerWeb.hint')}
         </Text>
         <View style={styles.coordBlock}>
           <Text
             variant="labelLarge"
             style={[styles.coordLabel, { color: theme.colors.onSurfaceVariant }]}
           >
-            Координаты (DD)
+            {t('mapPickerWeb.coords')}
           </Text>
           <TextInput
             value={coords}
             onChangeText={setCoords}
-            placeholder="55.7558, 37.6173"
+            placeholder={t('placeEdit.coordsPlaceholder')}
             placeholderTextColor={theme.colors.onSurfaceVariant}
             mode="outlined"
             style={styles.input}
           />
         </View>
         <Button mode="contained" onPress={handleConfirm}>
-          Выбрать
+          {t('mapPickerWeb.select')}
         </Button>
       </View>
     </ScreenBackground>

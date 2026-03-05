@@ -15,6 +15,7 @@ import {
   IconButton,
   Text,
 } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 import { useFocusEffect, useRouter, useLocalSearchParams } from 'expo-router';
 import { ScreenBackground } from '@/components/ScreenBackground';
 import { createPlace, addPlacePhoto } from '@/lib/dal';
@@ -24,6 +25,7 @@ import { parseDD, formatDD } from '@/lib/coordsUtils';
 import { getCurrentCoords } from '@/lib/locationService';
 
 export default function NewPlaceScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const params = useLocalSearchParams<{ returnTo?: string }>();
   const theme = useTheme();
@@ -73,13 +75,13 @@ export default function NewPlaceScreen() {
     if (result) {
       setCoords(formatDD(result.lat, result.lng));
     } else {
-      setError('Не удалось получить координаты. Разрешите доступ к геолокации.');
+      setError(t('placeNew.locationError'));
     }
   };
 
   const handleSave = async () => {
     if (!name.trim()) {
-      setError('Введите название');
+      setError(t('placeNew.nameRequired'));
       return;
     }
     setError('');
@@ -87,7 +89,7 @@ export default function NewPlaceScreen() {
     try {
       const parsed = parseDD(coords);
       if (!parsed) {
-        setError('Введите координаты в формате: широта, долгота');
+        setError(t('placeNew.coordsInvalid'));
         setSaving(false);
         return;
       }
@@ -109,11 +111,11 @@ export default function NewPlaceScreen() {
         router.replace(`/places/${place.id}`);
       }
     } catch (err) {
-      console.error('Ошибка сохранения:', err);
+      console.error('save error:', err);
       setError(
         Platform.OS === 'web'
-          ? 'БД недоступна на web. Используйте приложение на устройстве.'
-          : 'Не удалось сохранить'
+          ? t('placeNew.dbError')
+          : t('placeEdit.saveError')
       );
     } finally {
       setSaving(false);
@@ -124,19 +126,19 @@ export default function NewPlaceScreen() {
     <ScreenBackground style={styles.container}>
       <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title="Новое место" />
+        <Appbar.Content title={t('placeNew.title')} />
       </Appbar.Header>
 
       <ScrollView style={styles.content} contentContainerStyle={styles.form}>
         <TextInput
-          label="Название *"
+          label={`${t('placeNew.name')} *`}
           value={name}
           onChangeText={setName}
           mode="outlined"
           style={styles.input}
         />
         <TextInput
-          label="Описание"
+          label={t('placeNew.description')}
           value={description}
           onChangeText={setDescription}
           mode="outlined"
@@ -151,7 +153,7 @@ export default function NewPlaceScreen() {
             color={theme.colors.primary}
           />
           <Button mode="text" onPress={() => setVisitlater(!visitlater)}>
-            Посетить позже
+            {t('placeNew.visitlater')}
           </Button>
         </View>
         <View style={styles.row}>
@@ -161,7 +163,7 @@ export default function NewPlaceScreen() {
             color={theme.colors.primary}
           />
           <Button mode="text" onPress={() => setLiked(!liked)}>
-            Понравилось
+            {t('placeNew.liked')}
           </Button>
         </View>
 
@@ -170,13 +172,13 @@ export default function NewPlaceScreen() {
             variant="labelLarge"
             style={[styles.coordLabel, { color: theme.colors.onSurfaceVariant }]}
           >
-            Координаты (DD)
+            {t('placeNew.coords')}
           </Text>
           <TextInput
             value={coords}
             onChangeText={setCoords}
             mode="outlined"
-            placeholder="55.7558, 37.6173"
+            placeholder={t('placeNew.coordsPlaceholder')}
             placeholderTextColor={theme.colors.onSurfaceVariant}
             style={styles.input}
           />
@@ -188,7 +190,7 @@ export default function NewPlaceScreen() {
             onPress={handlePickOnMap}
             style={[styles.input, styles.coordButton]}
           >
-            Выбрать на карте
+            {t('placeNew.pickOnMap')}
           </Button>
           <Button
             mode="outlined"
@@ -196,20 +198,20 @@ export default function NewPlaceScreen() {
             onPress={handleMyLocation}
             style={[styles.input, styles.coordButton]}
           >
-            Моё местоположение
+            {t('placeNew.myLocation')}
           </Button>
         </View>
 
         <Text variant="titleSmall" style={styles.sectionTitle}>
-          Фотографии
+          {t('placeNew.photos')}
         </Text>
         <View style={styles.photoRow}>
           <Button mode="outlined" icon="image" onPress={handlePickPhoto}>
-            Галерея
+            {t('placeNew.gallery')}
           </Button>
           {Platform.OS !== 'web' && (
             <Button mode="outlined" icon="camera" onPress={handleTakePhoto}>
-              Камера
+              {t('placeNew.camera')}
             </Button>
           )}
         </View>
@@ -244,7 +246,7 @@ export default function NewPlaceScreen() {
           disabled={saving}
           style={styles.saveButton}
         >
-          Сохранить
+          {t('placeNew.save')}
         </Button>
       </ScrollView>
     </ScreenBackground>

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View, Platform, Linking } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Appbar, Button, Text, ActivityIndicator, useTheme } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import MapView, { Marker } from 'react-native-maps';
 import { ScreenBackground } from '@/components/ScreenBackground';
@@ -33,6 +34,7 @@ function openInNavigator(lat: number, lng: number) {
 }
 
 export default function PlaceMapScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const theme = useTheme();
@@ -67,7 +69,7 @@ export default function PlaceMapScreen() {
       <ScreenBackground style={styles.container}>
         <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
           <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Место на карте" />
+          <Appbar.Content title={t('placeMap.title')} />
         </Appbar.Header>
         <View style={styles.center}>
           <ActivityIndicator size="large" />
@@ -87,7 +89,7 @@ export default function PlaceMapScreen() {
     <ScreenBackground style={styles.container}>
       <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title={place.name} subtitle="На карте" />
+        <Appbar.Content title={place.name} subtitle={t('placeMap.title')} />
       </Appbar.Header>
 
       <MapView
@@ -109,14 +111,14 @@ export default function PlaceMapScreen() {
           onPress={() => openInExternalMap(place.lat, place.lng)}
           style={styles.footerButton}
         >
-          Открыть в приложении Карты
+          {t('placeMap.openInMaps')}
         </Button>
         <Button
           mode="contained-tonal"
           icon="navigation"
           onPress={() => openInNavigator(place.lat, place.lng)}
         >
-          Маршрут
+          {t('placeMap.route')}
         </Button>
       </View>
     </ScreenBackground>

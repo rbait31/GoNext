@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   useTheme,
 } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { ScreenBackground } from '@/components/ScreenBackground';
 import { getNextPlace, getCurrentTrip, getTripPlacesWithPlace } from '@/lib/dal';
@@ -37,6 +38,7 @@ function openInNavigator(lat: number, lng: number) {
 export default function NextPlaceScreen() {
   const router = useRouter();
   const theme = useTheme();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<Awaited<ReturnType<typeof getNextPlace>>>(null);
   const [emptyReason, setEmptyReason] = useState<'no_trip' | 'all_visited' | null>(null);
@@ -75,7 +77,7 @@ export default function NextPlaceScreen() {
       <ScreenBackground style={styles.container}>
         <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
           <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Следующее место" />
+          <Appbar.Content title={t('nextPlace.title')} />
         </Appbar.Header>
         <View style={styles.center}>
           <ActivityIndicator size="large" />
@@ -91,7 +93,7 @@ export default function NextPlaceScreen() {
       <ScreenBackground style={styles.container}>
         <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
           <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Следующее место" />
+          <Appbar.Content title={t('nextPlace.title')} />
         </Appbar.Header>
         <View style={styles.content}>
           <Text variant="labelLarge" style={styles.tripLabel}>
@@ -108,7 +110,7 @@ export default function NextPlaceScreen() {
                 </Text>
               ) : null}
               <Text variant="bodySmall" style={styles.orderHint}>
-                Пункт {tripPlace.order + 1} в маршруте
+                {t('nextPlace.orderHint', { order: tripPlace.order + 1 })}
               </Text>
             </Card.Content>
           </Card>
@@ -119,7 +121,7 @@ export default function NextPlaceScreen() {
               onPress={() => openInMap(place.lat, place.lng)}
               style={styles.button}
             >
-              Открыть на карте
+              {t('nextPlace.openOnMap')}
             </Button>
             <Button
               mode="contained-tonal"
@@ -127,19 +129,19 @@ export default function NextPlaceScreen() {
               onPress={() => openInNavigator(place.lat, place.lng)}
               style={styles.button}
             >
-              Открыть в навигаторе
+              {t('nextPlace.openInNav')}
             </Button>
             <Button
               mode="text"
               onPress={() => router.push(`/places/${place.id}`)}
             >
-              Карточка места
+              {t('nextPlace.placeCard')}
             </Button>
             <Button
               mode="text"
               onPress={() => router.push(`/trips/${trip.id}`)}
             >
-              Маршрут поездки
+              {t('nextPlace.tripRoute')}
             </Button>
           </View>
         </View>
@@ -156,20 +158,20 @@ export default function NextPlaceScreen() {
       <View style={styles.center}>
         <Text variant="headlineSmall" style={styles.emptyTitle}>
           {emptyReason === 'no_trip'
-            ? 'Нет активной поездки'
-            : 'Все места посещены'}
+            ? t('nextPlace.noTrip')
+            : t('nextPlace.allVisited')}
         </Text>
         <Text variant="bodyMedium" style={styles.emptyHint}>
           {emptyReason === 'no_trip'
-            ? 'Выберите текущую поездку в списке поездок или создайте новую.'
-            : 'Вы посетили все места в маршруте. Отлично!'}
+            ? t('nextPlace.noTripHint')
+            : t('nextPlace.allVisitedHint')}
         </Text>
         <Button
           mode="contained-tonal"
           onPress={() => router.push('/trips')}
           style={styles.emptyButton}
         >
-          Перейти к поездкам
+          {t('nextPlace.goToTrips')}
         </Button>
       </View>
     </ScreenBackground>

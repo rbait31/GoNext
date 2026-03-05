@@ -16,6 +16,7 @@ import {
   IconButton,
   Text,
 } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { ScreenBackground } from '@/components/ScreenBackground';
 import {
@@ -32,6 +33,7 @@ import { parseDD, formatDD } from '@/lib/coordsUtils';
 import { getCurrentCoords } from '@/lib/locationService';
 
 export default function EditPlaceScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const theme = useTheme();
@@ -76,8 +78,8 @@ export default function EditPlaceScreen() {
         console.error(err);
         setError(
           Platform.OS === 'web'
-            ? 'БД недоступна на web.'
-            : 'Не удалось загрузить место'
+            ? t('placeEdit.dbError')
+            : t('placeDetail.dbError')
         );
       })
       .finally(() => setLoading(false));
@@ -117,14 +119,14 @@ export default function EditPlaceScreen() {
     if (result) {
       setCoords(formatDD(result.lat, result.lng));
     } else {
-      setError('Не удалось получить координаты. Разрешите доступ к геолокации.');
+      setError(t('placeEdit.locationError'));
     }
   };
 
   const handleSave = async () => {
     if (isNaN(placeId)) return;
     if (!name.trim()) {
-      setError('Введите название');
+      setError(t('placeEdit.nameRequired'));
       return;
     }
     setError('');
@@ -132,7 +134,7 @@ export default function EditPlaceScreen() {
     try {
       const parsed = parseDD(coords);
       if (!parsed) {
-        setError('Введите координаты в формате: широта, долгота');
+        setError(t('placeEdit.coordsInvalid'));
         setSaving(false);
         return;
       }
@@ -146,11 +148,11 @@ export default function EditPlaceScreen() {
       });
       router.back();
     } catch (err) {
-      console.error('Ошибка сохранения:', err);
+      console.error('save error:', err);
       setError(
         Platform.OS === 'web'
-          ? 'БД недоступна на web.'
-          : 'Не удалось сохранить'
+          ? t('placeEdit.dbError')
+          : t('placeEdit.saveError')
       );
     } finally {
       setSaving(false);
@@ -162,7 +164,7 @@ export default function EditPlaceScreen() {
       <ScreenBackground style={styles.container}>
         <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
           <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Редактировать место" />
+          <Appbar.Content title={t('placeEdit.title')} />
         </Appbar.Header>
         <View style={styles.center}>
           <ActivityIndicator size="large" />
@@ -180,14 +182,14 @@ export default function EditPlaceScreen() {
 
       <ScrollView style={styles.content} contentContainerStyle={styles.form}>
         <TextInput
-          label="Название *"
+          label={`${t('placeEdit.name')} *`}
           value={name}
           onChangeText={setName}
           mode="outlined"
           style={styles.input}
         />
         <TextInput
-          label="Описание"
+          label={t('placeEdit.description')}
           value={description}
           onChangeText={setDescription}
           mode="outlined"
@@ -202,7 +204,7 @@ export default function EditPlaceScreen() {
             color={theme.colors.primary}
           />
           <Button mode="text" onPress={() => setVisitlater(!visitlater)}>
-            Посетить позже
+            {t('placeEdit.visitlater')}
           </Button>
         </View>
         <View style={styles.row}>
@@ -212,7 +214,7 @@ export default function EditPlaceScreen() {
             color={theme.colors.primary}
           />
           <Button mode="text" onPress={() => setLiked(!liked)}>
-            Понравилось
+            {t('placeEdit.liked')}
           </Button>
         </View>
 
@@ -221,13 +223,13 @@ export default function EditPlaceScreen() {
             variant="labelLarge"
             style={[styles.coordLabel, { color: theme.colors.onSurfaceVariant }]}
           >
-            Координаты (DD)
+            {t('placeEdit.coords')}
           </Text>
           <TextInput
             value={coords}
             onChangeText={setCoords}
             mode="outlined"
-            placeholder="55.7558, 37.6173"
+            placeholder={t('placeEdit.coordsPlaceholder')}
             placeholderTextColor={theme.colors.onSurfaceVariant}
             style={styles.input}
           />
@@ -239,7 +241,7 @@ export default function EditPlaceScreen() {
             onPress={handlePickOnMap}
             style={[styles.input, styles.coordButton]}
           >
-            Выбрать на карте
+            {t('placeEdit.pickOnMap')}
           </Button>
           <Button
             mode="outlined"
@@ -247,20 +249,20 @@ export default function EditPlaceScreen() {
             onPress={handleMyLocation}
             style={[styles.input, styles.coordButton]}
           >
-            Моё местоположение
+            {t('placeEdit.myLocation')}
           </Button>
         </View>
 
         <Text variant="titleSmall" style={styles.sectionTitle}>
-          Фотографии
+          {t('placeEdit.photos')}
         </Text>
         <View style={styles.photoRow}>
           <Button mode="outlined" icon="image" onPress={handlePickPhoto}>
-            Галерея
+            {t('placeEdit.gallery')}
           </Button>
           {Platform.OS !== 'web' && (
             <Button mode="outlined" icon="camera" onPress={handleTakePhoto}>
-              Камера
+              {t('placeEdit.camera')}
             </Button>
           )}
         </View>
@@ -295,7 +297,7 @@ export default function EditPlaceScreen() {
           disabled={saving}
           style={styles.saveButton}
         >
-          Сохранить
+          {t('placeEdit.save')}
         </Button>
       </ScrollView>
     </ScreenBackground>

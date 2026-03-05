@@ -19,17 +19,19 @@ import {
   Button,
   useTheme,
 } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import i18n from '@/lib/i18n';
 import { ScreenBackground } from '@/components/ScreenBackground';
 import { getPlaceById, getPlacePhotos } from '@/lib/dal';
 import type { PlacePhoto } from '@/lib/dal';
 import { getPhotoUri } from '@/lib/photoService';
 import type { Place } from '@/lib/types';
 
-function formatDate(iso: string): string {
+function formatDate(iso: string, locale: string): string {
   try {
     const d = new Date(iso);
-    return d.toLocaleDateString('ru-RU', {
+    return d.toLocaleDateString(locale, {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
@@ -67,6 +69,7 @@ export default function PlaceDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const theme = useTheme();
+  const { t } = useTranslation();
   const [place, setPlace] = useState<Place | null>(null);
   const [photos, setPhotos] = useState<PlacePhoto[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,7 +80,7 @@ export default function PlaceDetailScreen() {
 
   const loadPlace = useCallback(async () => {
     if (isNaN(placeId)) {
-      setError('Неверный ID места');
+      setError(t('placeDetail.invalidId'));
       setLoading(false);
       return;
     }
@@ -94,14 +97,14 @@ export default function PlaceDetailScreen() {
       console.error('Ошибка загрузки места:', err);
       setError(
         Platform.OS === 'web'
-          ? 'База данных недоступна на web. Используйте приложение на устройстве.'
-          : 'Не удалось загрузить место'
+          ? t('placeDetail.dbErrorWeb')
+          : t('placeDetail.dbError')
       );
       setPlace(null);
     } finally {
       setLoading(false);
     }
-  }, [placeId]);
+  }, [placeId, t]);
 
   useFocusEffect(
     useCallback(() => {
@@ -118,7 +121,7 @@ export default function PlaceDetailScreen() {
       <ScreenBackground style={styles.container}>
         <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
           <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Место" />
+          <Appbar.Content title={t('placeDetail.place')} />
         </Appbar.Header>
         <View style={styles.center}>
           <ActivityIndicator size="large" />
@@ -132,10 +135,10 @@ export default function PlaceDetailScreen() {
       <ScreenBackground style={styles.container}>
         <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
           <Appbar.BackAction onPress={() => router.back()} />
-          <Appbar.Content title="Место" />
+          <Appbar.Content title={t('placeDetail.place')} />
         </Appbar.Header>
         <View style={styles.center}>
-          <Text variant="bodyLarge">{error || 'Место не найдено'}</Text>
+          <Text variant="bodyLarge">{error || t('placeDetail.placeNotFound')}</Text>
         </View>
       </ScreenBackground>
     );
@@ -155,12 +158,12 @@ export default function PlaceDetailScreen() {
             <View style={styles.chips}>
               {place.visitlater && (
                 <Chip icon="map-marker" compact>
-                  Посетить позже
+                  {t('placeDetail.visitLater')}
                 </Chip>
               )}
               {place.liked && (
                 <Chip icon="heart" compact>
-                  Понравилось
+                  {t('placeDetail.liked')}
                 </Chip>
               )}
             </View>
@@ -170,7 +173,7 @@ export default function PlaceDetailScreen() {
               </Text>
             ) : null}
             <Text variant="bodySmall" style={styles.date}>
-              Добавлено: {formatDate(place.createdAt)}
+              {t('placeDetail.added')}: {formatDate(place.createdAt, i18n.language === 'en' ? 'en-US' : 'ru-RU')}
             </Text>
           </Card.Content>
         </Card>
@@ -179,7 +182,7 @@ export default function PlaceDetailScreen() {
           <Card mode="elevated" style={styles.card}>
             <Card.Content>
               <Text variant="titleSmall" style={styles.sectionTitle}>
-                Фотографии
+                {t('placeDetail.photos')}
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {photos.map((ph) => (
@@ -231,7 +234,7 @@ export default function PlaceDetailScreen() {
 
         <Card mode="elevated" style={styles.card}>
           <Card.Content>
-            <Text variant="titleSmall">Координаты</Text>
+            <Text variant="titleSmall">{t('placeDetail.coords')}</Text>
             <Text variant="bodyMedium">
               {place.lat.toFixed(6)}, {place.lng.toFixed(6)}
             </Text>
@@ -244,25 +247,25 @@ export default function PlaceDetailScreen() {
             icon="map"
             onPress={() => router.push(`/places/${place.id}/map`)}
             style={styles.button}
-          >
-            Показать на карте
-          </Button>
+            >
+              {t('placeDetail.showOnMap')}
+            </Button>
           <Button
             mode="outlined"
             icon="open-in-new"
             onPress={() => openInMap(place.lat, place.lng)}
             style={styles.button}
-          >
-            Открыть в приложении Карты
-          </Button>
+            >
+              {t('placeDetail.openInMaps')}
+            </Button>
           <Button
             mode="contained-tonal"
             icon="navigation"
             onPress={() => openInNavigator(place.lat, place.lng)}
             style={styles.button}
-          >
-            Маршрут
-          </Button>
+            >
+              {t('placeDetail.route')}
+            </Button>
         </View>
       </ScrollView>
     </ScreenBackground>
