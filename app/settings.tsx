@@ -1,4 +1,5 @@
 import { StyleSheet, View, Pressable } from 'react-native';
+import Constants from 'expo-constants';
 import { Appbar, Text, List, Switch, useTheme } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
@@ -90,6 +91,16 @@ export default function SettingsScreen() {
               ) : null
             }
             onPress={() => handleLanguageChange('en')}
+          />
+        </List.Section>
+        <List.Section>
+          <List.Subheader>{t('settings.about')}</List.Subheader>
+          <List.Item
+            title={t('settings.about')}
+            description={Constants.expoConfig?.version ?? '1.0.0'}
+            left={(props) => <List.Icon {...props} icon="information" />}
+            right={(props) => <List.Icon {...props} icon="chevron-right" />}
+            onPress={() => router.push('/about')}
           />
         </List.Section>
       </View>

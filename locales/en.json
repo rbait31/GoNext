@@ -146,6 +146,10 @@
     "allVisitedHint": "You visited all places in the route. Great!",
     "goToTrips": "Go to trips"
   },
+  "about": {
+    "title": "About",
+    "description": "GoNext — an app for travel planning and trip organization. Save places, create routes, and pick your next destination."
+  },
   "settings": {
     "title": "Settings",
     "appearance": "Appearance",
@@ -153,6 +157,8 @@
     "darkThemeShade": "Dark theme shade",
     "language": "Language",
     "languageRu": "Русский",
-    "languageEn": "English"
+    "languageEn": "English",
+    "about": "About",
+    "version": "Version"
   }
 }
