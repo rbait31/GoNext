@@ -4,7 +4,6 @@ import {
   View,
   ScrollView,
   ActivityIndicator,
-  ImageBackground,
   Platform,
   Image,
   Modal,
@@ -24,7 +23,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
+import { ScreenBackground } from '@/components/ScreenBackground';
 import {
   getTripById,
   getTripPlacesWithPlace,
@@ -229,21 +228,21 @@ export default function TripDetailScreen() {
 
   if (loading || !trip) {
     return (
-      <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
-        <Appbar.Header style={styles.appbar}>
+      <ScreenBackground style={styles.container}>
+        <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
           <Appbar.BackAction onPress={() => router.back()} />
           <Appbar.Content title="Поездка" />
         </Appbar.Header>
         <View style={styles.center}>
           <ActivityIndicator size="large" />
         </View>
-      </ImageBackground>
+      </ScreenBackground>
     );
   }
 
   return (
-    <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
-      <Appbar.Header style={styles.appbar}>
+    <ScreenBackground style={styles.container}>
+      <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content
           title={trip.title}
@@ -446,7 +445,7 @@ export default function TripDetailScreen() {
           </ScrollView>
         </View>
       </Modal>
-    </ImageBackground>
+    </ScreenBackground>
   );
 }
 

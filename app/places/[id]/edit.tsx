@@ -4,7 +4,6 @@ import {
   StyleSheet,
   View,
   Image,
-  ImageBackground,
   Platform,
   ActivityIndicator,
 } from 'react-native';
@@ -18,7 +17,7 @@ import {
   Text,
 } from 'react-native-paper';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
-import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
+import { ScreenBackground } from '@/components/ScreenBackground';
 import {
   getPlaceById,
   updatePlace,
@@ -160,21 +159,21 @@ export default function EditPlaceScreen() {
 
   if (loading) {
     return (
-      <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
-        <Appbar.Header style={styles.appbar}>
+      <ScreenBackground style={styles.container}>
+        <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
           <Appbar.BackAction onPress={() => router.back()} />
           <Appbar.Content title="Редактировать место" />
         </Appbar.Header>
         <View style={styles.center}>
           <ActivityIndicator size="large" />
         </View>
-      </ImageBackground>
+      </ScreenBackground>
     );
   }
 
   return (
-    <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
-      <Appbar.Header style={styles.appbar}>
+    <ScreenBackground style={styles.container}>
+      <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Редактировать место" />
       </Appbar.Header>
@@ -299,7 +298,7 @@ export default function EditPlaceScreen() {
           Сохранить
         </Button>
       </ScrollView>
-    </ImageBackground>
+    </ScreenBackground>
   );
 }
 

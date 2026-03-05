@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
-  ImageBackground,
   StyleSheet,
   View,
   ScrollView,
@@ -16,7 +15,7 @@ import {
   useTheme,
 } from 'react-native-paper';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
+import { ScreenBackground } from '@/components/ScreenBackground';
 import { getAllTrips } from '@/lib/dal';
 import type { Trip } from '@/lib/types';
 
@@ -79,12 +78,8 @@ export default function TripsListScreen() {
   };
 
   return (
-    <ImageBackground
-      source={BACKGROUND_IMAGE}
-      style={styles.container}
-      resizeMode="cover"
-    >
-      <Appbar.Header style={styles.appbar}>
+    <ScreenBackground style={styles.container}>
+      <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Поездки" />
       </Appbar.Header>
@@ -150,7 +145,7 @@ export default function TripsListScreen() {
         onPress={handleAddTrip}
         label="Добавить"
       />
-    </ImageBackground>
+    </ScreenBackground>
   );
 }
 

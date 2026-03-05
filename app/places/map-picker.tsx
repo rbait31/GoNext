@@ -1,15 +1,16 @@
 import { useState, useCallback, useRef } from 'react';
-import { StyleSheet, View, ImageBackground } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Appbar, Button, Text } from 'react-native-paper';
+import { Appbar, Button, Text, useTheme } from 'react-native-paper';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import MapView, { Marker } from 'react-native-maps';
-import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
+import { ScreenBackground } from '@/components/ScreenBackground';
 import { setMapSelection } from '@/lib/selectionStore';
 import { getCurrentCoords } from '@/lib/locationService';
 
 export default function MapPickerScreen() {
   const router = useRouter();
+  const theme = useTheme();
   const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ lat?: string; lng?: string }>();
   const initialLat = parseFloat(params.lat ?? '55.7558') || 55.7558;
@@ -56,8 +57,8 @@ export default function MapPickerScreen() {
   }, []);
 
   return (
-    <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
-      <Appbar.Header style={styles.appbar}>
+    <ScreenBackground style={styles.container}>
+      <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Выбрать на карте" />
         <Appbar.Action icon="check" onPress={handleConfirm} />
@@ -86,7 +87,7 @@ export default function MapPickerScreen() {
           Выбрать
         </Button>
       </View>
-    </ImageBackground>
+    </ScreenBackground>
   );
 }
 

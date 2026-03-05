@@ -6,7 +6,6 @@ import {
   Linking,
   Platform,
   Image,
-  ImageBackground,
   Modal,
   Pressable,
   Dimensions,
@@ -18,9 +17,10 @@ import {
   Text,
   ActivityIndicator,
   Button,
+  useTheme,
 } from 'react-native-paper';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
-import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
+import { ScreenBackground } from '@/components/ScreenBackground';
 import { getPlaceById, getPlacePhotos } from '@/lib/dal';
 import type { PlacePhoto } from '@/lib/dal';
 import { getPhotoUri } from '@/lib/photoService';
@@ -66,6 +66,7 @@ function openInNavigator(lat: number, lng: number) {
 export default function PlaceDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const theme = useTheme();
   const [place, setPlace] = useState<Place | null>(null);
   const [photos, setPhotos] = useState<PlacePhoto[]>([]);
   const [loading, setLoading] = useState(true);
@@ -114,35 +115,35 @@ export default function PlaceDetailScreen() {
 
   if (loading) {
     return (
-      <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
-        <Appbar.Header style={styles.appbar}>
+      <ScreenBackground style={styles.container}>
+        <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
           <Appbar.BackAction onPress={() => router.back()} />
           <Appbar.Content title="Место" />
         </Appbar.Header>
         <View style={styles.center}>
           <ActivityIndicator size="large" />
         </View>
-      </ImageBackground>
+      </ScreenBackground>
     );
   }
 
   if (error || !place) {
     return (
-      <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
-        <Appbar.Header style={styles.appbar}>
+      <ScreenBackground style={styles.container}>
+        <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
           <Appbar.BackAction onPress={() => router.back()} />
           <Appbar.Content title="Место" />
         </Appbar.Header>
         <View style={styles.center}>
           <Text variant="bodyLarge">{error || 'Место не найдено'}</Text>
         </View>
-      </ImageBackground>
+      </ScreenBackground>
     );
   }
 
   return (
-    <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
-      <Appbar.Header style={styles.appbar}>
+    <ScreenBackground style={styles.container}>
+      <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title={place.name} />
         <Appbar.Action icon="pencil" onPress={handleEdit} />
@@ -264,7 +265,7 @@ export default function PlaceDetailScreen() {
           </Button>
         </View>
       </ScrollView>
-    </ImageBackground>
+    </ScreenBackground>
   );
 }
 

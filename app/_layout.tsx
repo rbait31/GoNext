@@ -4,18 +4,28 @@ import { Stack } from 'expo-router';
 
 // Предупреждение из зависимостей (expo-router/react-navigation)
 LogBox.ignoreLogs(['props.pointerEvents is deprecated']);
-import { PaperProvider } from 'react-native-paper';
 import { StatusBar } from 'expo-status-bar';
+import { ThemeProvider, useThemeMode } from '@/lib/ThemeContext';
 import { getDatabase } from '@/lib/db';
 
-export default function RootLayout() {
+function LayoutContent() {
+  const { themeMode } = useThemeMode();
   useEffect(() => {
     getDatabase().catch((err: unknown) => console.error('DB init error:', err));
   }, []);
+
   return (
-    <PaperProvider>
-      <StatusBar style="auto" />
+    <>
+      <StatusBar style={themeMode === 'dark' ? 'light' : 'dark'} />
       <Stack screenOptions={{ headerShown: false }} />
-    </PaperProvider>
+    </>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <LayoutContent />
+    </ThemeProvider>
   );
 }

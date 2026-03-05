@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View, ImageBackground, Platform, Linking } from 'react-native';
+import { StyleSheet, View, Platform, Linking } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Appbar, Button, Text, ActivityIndicator } from 'react-native-paper';
+import { Appbar, Button, Text, ActivityIndicator, useTheme } from 'react-native-paper';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import MapView, { Marker } from 'react-native-maps';
-import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
+import { ScreenBackground } from '@/components/ScreenBackground';
 import { getPlaceById } from '@/lib/dal';
 import type { Place } from '@/lib/types';
 
@@ -35,6 +35,7 @@ function openInNavigator(lat: number, lng: number) {
 export default function PlaceMapScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const theme = useTheme();
   const insets = useSafeAreaInsets();
   const placeId = id ? parseInt(String(id), 10) : NaN;
   const [place, setPlace] = useState<Place | null>(null);
@@ -63,15 +64,15 @@ export default function PlaceMapScreen() {
 
   if (loading || !place) {
     return (
-      <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
-        <Appbar.Header style={styles.appbar}>
+      <ScreenBackground style={styles.container}>
+        <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
           <Appbar.BackAction onPress={() => router.back()} />
           <Appbar.Content title="Место на карте" />
         </Appbar.Header>
         <View style={styles.center}>
           <ActivityIndicator size="large" />
         </View>
-      </ImageBackground>
+      </ScreenBackground>
     );
   }
 
@@ -83,8 +84,8 @@ export default function PlaceMapScreen() {
   };
 
   return (
-    <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
-      <Appbar.Header style={styles.appbar}>
+    <ScreenBackground style={styles.container}>
+      <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title={place.name} subtitle="На карте" />
       </Appbar.Header>
@@ -118,7 +119,7 @@ export default function PlaceMapScreen() {
           Маршрут
         </Button>
       </View>
-    </ImageBackground>
+    </ScreenBackground>
   );
 }
 

@@ -1,22 +1,49 @@
-import { StyleSheet, View, ImageBackground } from 'react-native';
-import { Appbar, Text } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { Appbar, Text, List, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
-import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
+import { useThemeMode } from '@/lib/ThemeContext';
+import { ScreenBackground } from '@/components/ScreenBackground';
 
 export default function SettingsScreen() {
   const router = useRouter();
+  const theme = useTheme();
+  const { themeMode, setThemeMode } = useThemeMode();
 
   return (
-    <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
-      <Appbar.Header style={styles.appbar}>
+    <ScreenBackground style={styles.container}>
+      <Appbar.Header style={theme.dark ? undefined : styles.appbar}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Настройки" />
       </Appbar.Header>
 
       <View style={styles.content}>
-        <Text variant="bodyLarge">Настройки приложения</Text>
+        <List.Section>
+          <List.Subheader>Оформление</List.Subheader>
+          <List.Item
+            title="Светлая тема"
+            description="Фоновое изображение на экранах"
+            left={(props) => <List.Icon {...props} icon="weather-sunny" />}
+            right={(props) =>
+              themeMode === 'light' ? (
+                <List.Icon {...props} icon="check" color={theme.colors.primary} />
+              ) : null
+            }
+            onPress={() => setThemeMode('light')}
+          />
+          <List.Item
+            title="Тёмная тема"
+            description="Без фонового изображения"
+            left={(props) => <List.Icon {...props} icon="weather-night" />}
+            right={(props) =>
+              themeMode === 'dark' ? (
+                <List.Icon {...props} icon="check" color={theme.colors.primary} />
+              ) : null
+            }
+            onPress={() => setThemeMode('dark')}
+          />
+        </List.Section>
       </View>
-    </ImageBackground>
+    </ScreenBackground>
   );
 }
 
@@ -25,6 +52,6 @@ const styles = StyleSheet.create({
   appbar: { backgroundColor: 'transparent' },
   content: {
     flex: 1,
-    padding: 24,
+    paddingTop: 8,
   },
 });

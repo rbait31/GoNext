@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View, ImageBackground, Platform } from 'react-native';
+import { ScrollView, StyleSheet, View, Platform } from 'react-native';
 import {
   Appbar,
   Button,
@@ -9,7 +9,7 @@ import {
   Text,
 } from 'react-native-paper';
 import { useRouter } from 'expo-router';
-import { BACKGROUND_IMAGE } from '@/lib/backgroundAsset';
+import { ScreenBackground } from '@/components/ScreenBackground';
 import { createTrip } from '@/lib/dal';
 
 export default function NewTripScreen() {
@@ -54,8 +54,8 @@ export default function NewTripScreen() {
   };
 
   return (
-    <ImageBackground source={BACKGROUND_IMAGE} style={styles.container} resizeMode="cover">
-      <Appbar.Header style={styles.appbar}>
+    <ScreenBackground style={styles.container}>
+      <Appbar.Header style={!theme.dark ? styles.appbar : undefined}>
         <Appbar.BackAction onPress={() => router.back()} />
         <Appbar.Content title="Новая поездка" />
       </Appbar.Header>
@@ -121,7 +121,7 @@ export default function NewTripScreen() {
           Создать
         </Button>
       </ScrollView>
-    </ImageBackground>
+    </ScreenBackground>
   );
 }
 
